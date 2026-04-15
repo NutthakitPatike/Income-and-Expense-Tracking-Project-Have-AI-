@@ -15,6 +15,7 @@ import {
   Bell,
   Settings,
   X,
+  Tags,
 } from "lucide-react";
 
 const navItems = [
@@ -24,6 +25,7 @@ const navItems = [
   { href: "/goals", label: "เป้าหมาย", icon: Target },
   { href: "/reports", label: "รายงาน", icon: BarChart3 },
   { href: "/accounts", label: "บัญชี", icon: Wallet },
+  { href: "/categories", label: "หมวดหมู่", icon: Tags },
   { href: "/split-bill", label: "หารบิล", icon: Receipt },
   { href: "/import", label: "นำเข้า", icon: Upload },
   { href: "/notifications", label: "แจ้งเตือน", icon: Bell },
