@@ -90,7 +90,7 @@ export default function OnboardingPage() {
   };
 
   return (
-    <main className="min-h-screen bg-cream flex items-center justify-center px-4 py-8">
+    <main className="min-h-screen bg-cream dark:bg-cream-dark flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         {/* Progress */}
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -110,8 +110,8 @@ export default function OnboardingPage() {
           <div className="space-y-6">
             <div className="text-center">
               <div className="text-5xl mb-3">🍡</div>
-              <h2 className="text-2xl font-bold text-ink">สวัสดี! เริ่มกันเลย</h2>
-              <p className="text-ink/50 text-sm mt-1">บอกชื่อของคุณและเลือกสกุลเงิน</p>
+              <h2 className="text-2xl font-bold text-ink dark:text-ink-dark">สวัสดี! เริ่มกันเลย</h2>
+              <p className="text-ink/50 dark:text-ink-dark/50 text-sm mt-1">บอกชื่อของคุณและเลือกสกุลเงิน</p>
             </div>
             <Input
               label="ชื่อของคุณ"
@@ -120,7 +120,7 @@ export default function OnboardingPage() {
               onChange={(e) => setName(e.target.value)}
             />
             <div>
-              <label className="block text-sm font-medium text-ink/70 mb-2">สกุลเงิน</label>
+              <label className="block text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">สกุลเงิน</label>
               <div className="grid grid-cols-2 gap-2">
                 {currencies.map((c) => (
                   <button
@@ -130,7 +130,7 @@ export default function OnboardingPage() {
                       "flex items-center gap-2 px-4 py-3 rounded-2xl border text-sm font-medium transition-all",
                       currency === c.code
                         ? "border-sakura bg-sakura/10 text-sakura-dark"
-                        : "border-sakura/20 bg-white text-ink/60 hover:bg-cream"
+                        : "border-sakura/20 bg-white dark:bg-[#333330] text-ink/60 dark:text-ink-dark/60 hover:bg-cream dark:hover:bg-[#3a3a37]"
                     )}
                   >
                     <span className="text-lg">{c.symbol}</span>
@@ -144,7 +144,7 @@ export default function OnboardingPage() {
             </Button>
             <button
               onClick={() => (window.location.href = "/dashboard")}
-              className="w-full text-center text-sm text-ink/40 hover:text-ink/60"
+              className="w-full text-center text-sm text-ink/40 dark:text-ink-dark/40 hover:text-ink/60 dark:hover:text-ink-dark/60"
             >
               ข้ามไปก่อน
             </button>
@@ -156,8 +156,8 @@ export default function OnboardingPage() {
           <div className="space-y-6">
             <div className="text-center">
               <div className="text-5xl mb-3">💰</div>
-              <h2 className="text-2xl font-bold text-ink">สร้างบัญชีแรก</h2>
-              <p className="text-ink/50 text-sm mt-1">เลือกประเภทบัญชีที่คุณใช้บ่อย</p>
+              <h2 className="text-2xl font-bold text-ink dark:text-ink-dark">สร้างบัญชีแรก</h2>
+              <p className="text-ink/50 dark:text-ink-dark/50 text-sm mt-1">เลือกประเภทบัญชีที่คุณใช้บ่อย</p>
             </div>
             <div className="grid grid-cols-3 gap-2">
               {accountTypes.map((a) => {
@@ -170,13 +170,13 @@ export default function OnboardingPage() {
                       "flex flex-col items-center gap-2 px-3 py-4 rounded-2xl border transition-all",
                       accountType === a.type
                         ? "border-sakura bg-sakura/10"
-                        : "border-sakura/20 bg-white hover:bg-cream"
+                        : "border-sakura/20 bg-white dark:bg-[#333330] hover:bg-cream dark:hover:bg-[#3a3a37]"
                     )}
                   >
                     <div className={cn("w-10 h-10 rounded-full flex items-center justify-center", a.color)}>
                       <Icon className="w-5 h-5" />
                     </div>
-                    <span className="text-xs font-medium text-ink">{a.label}</span>
+                    <span className="text-xs font-medium text-ink dark:text-ink-dark">{a.label}</span>
                   </button>
                 );
               })}
@@ -210,12 +210,12 @@ export default function OnboardingPage() {
           <div className="space-y-6">
             <div className="text-center">
               <div className="text-5xl mb-3">🏷️</div>
-              <h2 className="text-2xl font-bold text-ink">เลือกหมวดหมู่</h2>
-              <p className="text-ink/50 text-sm mt-1">เลือกหมวดหมู่ที่คุณใช้บ่อย (แก้ไขทีหลังได้)</p>
+              <h2 className="text-2xl font-bold text-ink dark:text-ink-dark">เลือกหมวดหมู่</h2>
+              <p className="text-ink/50 dark:text-ink-dark/50 text-sm mt-1">เลือกหมวดหมู่ที่คุณใช้บ่อย (แก้ไขทีหลังได้)</p>
             </div>
 
             <div>
-              <p className="text-sm font-medium text-ink/70 mb-2">รายจ่าย</p>
+              <p className="text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">รายจ่าย</p>
               <div className="flex flex-wrap gap-2">
                 {defaultCategories
                   .filter((c) => c.type === "expense")
@@ -227,7 +227,7 @@ export default function OnboardingPage() {
                         "flex items-center gap-1.5 px-3 py-2 rounded-full text-sm border transition-all",
                         selectedCategories.includes(cat.name)
                           ? "border-sakura bg-sakura/10 text-sakura-dark"
-                          : "border-sakura/20 bg-white text-ink/50 hover:bg-cream"
+                          : "border-sakura/20 bg-white dark:bg-[#333330] text-ink/50 dark:text-ink-dark/50 hover:bg-cream dark:hover:bg-[#3a3a37]"
                       )}
                     >
                       {selectedCategories.includes(cat.name) && (
@@ -240,7 +240,7 @@ export default function OnboardingPage() {
             </div>
 
             <div>
-              <p className="text-sm font-medium text-ink/70 mb-2">รายรับ</p>
+              <p className="text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">รายรับ</p>
               <div className="flex flex-wrap gap-2">
                 {defaultCategories
                   .filter((c) => c.type === "income")
@@ -252,7 +252,7 @@ export default function OnboardingPage() {
                         "flex items-center gap-1.5 px-3 py-2 rounded-full text-sm border transition-all",
                         selectedCategories.includes(cat.name)
                           ? "border-mint bg-mint/10 text-green-700"
-                          : "border-sakura/20 bg-white text-ink/50 hover:bg-cream"
+                          : "border-sakura/20 bg-white dark:bg-[#333330] text-ink/50 dark:text-ink-dark/50 hover:bg-cream dark:hover:bg-[#3a3a37]"
                       )}
                     >
                       {selectedCategories.includes(cat.name) && (

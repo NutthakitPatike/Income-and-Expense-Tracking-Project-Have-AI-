@@ -155,7 +155,7 @@ export default function AccountsPage() {
 
         <div className="grid gap-3">
           {accounts.map((account) => (
-            <Card key={account.id} className="flex items-center gap-4">
+            <Card key={account.id} className="flex flex-wrap items-center gap-3 sm:gap-4">
               <div
                 className="w-12 h-12 rounded-2xl flex items-center justify-center"
                 style={{ backgroundColor: `${account.color}30`, color: account.color }}

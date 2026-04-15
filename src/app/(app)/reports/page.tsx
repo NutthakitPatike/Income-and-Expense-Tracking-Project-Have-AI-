@@ -34,18 +34,18 @@ export default function ReportsPage() {
     <AppLayout title="รายงาน">
       <div className="space-y-6">
         {/* Monthly Summary */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Card className="text-center">
             <p className="text-xs text-ink/50 dark:text-ink-dark/50">รายรับ</p>
-            <p className="text-lg font-bold text-green-600 mt-1">{formatCurrency(totalIncome)}</p>
+            <p className="text-base sm:text-lg font-bold text-green-600 mt-1">{formatCurrency(totalIncome)}</p>
           </Card>
           <Card className="text-center">
             <p className="text-xs text-ink/50 dark:text-ink-dark/50">รายจ่าย</p>
-            <p className="text-lg font-bold text-sakura-dark mt-1">{formatCurrency(totalExpense)}</p>
+            <p className="text-base sm:text-lg font-bold text-sakura-dark mt-1">{formatCurrency(totalExpense)}</p>
           </Card>
           <Card className="text-center">
             <p className="text-xs text-ink/50 dark:text-ink-dark/50">คงเหลือ</p>
-            <p className={`text-lg font-bold mt-1 ${net >= 0 ? "text-green-600" : "text-red-500"}`}>
+            <p className={`text-base sm:text-lg font-bold mt-1 ${net >= 0 ? "text-green-600" : "text-red-500"}`}>
               {formatCurrency(net)}
             </p>
           </Card>

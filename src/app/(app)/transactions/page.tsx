@@ -132,7 +132,7 @@ export default function TransactionsPage() {
                   </span>
                   <button
                     onClick={() => handleDelete(tx.id)}
-                    className="p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                   >
                     <Trash2 className="w-3.5 h-3.5 text-red-400" />
                   </button>
