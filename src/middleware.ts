@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
             request: { headers: request.headers },
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            response.cookies.set(name, value, { ...options, maxAge: 60 * 60 * 24 * 30 })
           );
         },
       },

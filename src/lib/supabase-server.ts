@@ -14,7 +14,7 @@ export function createServerSupabaseClient() {
         },
         set(name: string, value: string, options: CookieOptions) {
           try {
-            cookieStore.set({ name, value, ...options });
+            cookieStore.set({ name, value, ...options, maxAge: 60 * 60 * 24 * 30 });
           } catch (error) {
             // Server component can't set cookies
           }
