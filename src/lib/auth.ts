@@ -52,6 +52,17 @@ export async function getCurrentUser() {
     await prisma.category.createMany({
       data: defaultCategories.map((cat) => ({ ...cat, userId: dbUser!.id })),
     });
+
+    // Seed default accounts for new user
+    const defaultAccounts = [
+      { name: "เงินสด", type: "cash", balance: 0, icon: "💵", color: "#B5EAD7" },
+      { name: "บัญชีธนาคาร", type: "bank", balance: 0, icon: "🏦", color: "#C7CEEA" },
+      { name: "E-Wallet", type: "wallet", balance: 0, icon: "📱", color: "#D4A5FF" },
+    ];
+
+    await prisma.account.createMany({
+      data: defaultAccounts.map((acc) => ({ ...acc, userId: dbUser!.id })),
+    });
   }
 
   return dbUser;
