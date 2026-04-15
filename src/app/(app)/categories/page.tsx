@@ -38,6 +38,7 @@ export default function CategoriesPage() {
   const [type, setType] = useState("expense");
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<"all" | "income" | "expense">("all");
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const fetchCategories = () => {
     fetch("/api/categories")
@@ -114,10 +115,10 @@ export default function CategoriesPage() {
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("ต้องการลบหมวดหมู่นี้?")) return;
+  const confirmDelete = async () => {
+    if (!deleteId) return;
     try {
-      const res = await fetch(`/api/categories/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/categories/${deleteId}`, { method: "DELETE" });
       if (res.ok) {
         toast.success("ลบหมวดหมู่แล้ว");
         fetchCategories();
@@ -127,6 +128,7 @@ export default function CategoriesPage() {
     } catch {
       toast.error("เกิดข้อผิดพลาด");
     }
+    setDeleteId(null);
   };
 
   const filtered = categories.filter(
@@ -308,7 +310,7 @@ export default function CategoriesPage() {
                   <Pencil className="w-4 h-4 text-ink/40" />
                 </button>
                 <button
-                  onClick={() => handleDelete(cat.id)}
+                  onClick={() => setDeleteId(cat.id)}
                   className="p-2 rounded-xl hover:bg-red-50 transition-colors"
                 >
                   <Trash2 className="w-4 h-4 text-red-400" />
@@ -325,6 +327,35 @@ export default function CategoriesPage() {
           )}
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteId && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-xl space-y-4">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Trash2 className="w-6 h-6 text-red-400" />
+              </div>
+              <p className="font-semibold text-ink">ลบหมวดหมู่นี้?</p>
+              <p className="text-sm text-ink/50 mt-1">หมวดหมู่ที่ลบแล้วจะไม่สามารถกู้คืนได้</p>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setDeleteId(null)}
+                className="flex-1 !bg-gray-100 !text-ink/70 hover:!bg-gray-200"
+              >
+                ยกเลิก
+              </Button>
+              <Button
+                onClick={confirmDelete}
+                className="flex-1 !bg-red-500 hover:!bg-red-600 !text-white"
+              >
+                ลบเลย
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 }
