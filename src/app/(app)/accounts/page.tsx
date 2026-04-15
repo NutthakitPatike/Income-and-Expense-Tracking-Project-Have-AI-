@@ -117,12 +117,12 @@ export default function AccountsPage() {
     <AppLayout title="บัญชี">
       <div className="space-y-4">
         <Card className="bg-gradient-to-br from-sakura/30 to-lavender/20 border-none text-center">
-          <p className="text-sm text-ink/60">ยอดเงินทั้งหมด</p>
-          <p className="text-3xl font-bold text-ink mt-1">{formatCurrency(totalBalance)}</p>
+          <p className="text-sm text-ink/60 dark:text-ink-dark/60">ยอดเงินทั้งหมด</p>
+          <p className="text-3xl font-bold text-ink dark:text-ink-dark mt-1">{formatCurrency(totalBalance)}</p>
         </Card>
 
         <div className="flex justify-between items-center">
-          <p className="text-sm text-ink/50">บัญชีของคุณ ({accounts.length})</p>
+          <p className="text-sm text-ink/50 dark:text-ink-dark/50">บัญชีของคุณ ({accounts.length})</p>
           <Button size="sm" onClick={() => { resetForm(); setShowForm(true); }}>
             <Plus className="w-4 h-4" /> เพิ่มบัญชี
           </Button>
@@ -132,16 +132,16 @@ export default function AccountsPage() {
         {showForm && (
           <Card className="space-y-3">
             <div className="flex justify-between items-center">
-              <p className="font-semibold text-ink text-sm">{editId ? "แก้ไขบัญชี" : "เพิ่มบัญชีใหม่"}</p>
+              <p className="font-semibold text-ink dark:text-ink-dark text-sm">{editId ? "แก้ไขบัญชี" : "เพิ่มบัญชีใหม่"}</p>
               <button onClick={resetForm}><X className="w-4 h-4 text-ink/40" /></button>
             </div>
             <Input label="ชื่อบัญชี" value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="เช่น ธนาคารกสิกร" />
             <div>
-              <label className="block text-sm font-medium text-ink/70 mb-2">ประเภท</label>
+              <label className="block text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">ประเภท</label>
               <div className="flex gap-2">
                 {["cash", "bank", "wallet"].map((t) => (
                   <button key={t} type="button" onClick={() => setNewType(t)}
-                    className={`px-4 py-2 rounded-full text-sm border transition-all ${newType === t ? "bg-sakura/20 border-sakura text-sakura-dark" : "bg-white border-sakura/20 text-ink/50"}`}
+                    className={`px-4 py-2 rounded-full text-sm border transition-all ${newType === t ? "bg-sakura/20 border-sakura text-sakura-dark" : "bg-white dark:bg-[#333330] border-sakura/20 text-ink/50 dark:text-ink-dark/50"}`}
                   >{typeLabel[t]}</button>
                 ))}
               </div>
@@ -163,22 +163,22 @@ export default function AccountsPage() {
                 {iconMap[account.type] || <Wallet className="w-5 h-5" />}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-ink text-sm truncate">{account.name}</p>
+                <p className="font-semibold text-ink dark:text-ink-dark text-sm truncate">{account.name}</p>
                 <Badge className="mt-0.5">{typeLabel[account.type] || account.type}</Badge>
               </div>
-              <p className="font-bold text-ink text-sm whitespace-nowrap">{formatCurrency(account.balance)}</p>
+              <p className="font-bold text-ink dark:text-ink-dark text-sm whitespace-nowrap">{formatCurrency(account.balance)}</p>
               <div className="flex gap-1">
-                <button onClick={() => openEdit(account)} className="p-2 rounded-xl hover:bg-cream transition-colors">
-                  <Pencil className="w-4 h-4 text-ink/40" />
+                <button onClick={() => openEdit(account)} className="p-2 rounded-xl hover:bg-cream dark:hover:bg-[#3a3a37] transition-colors">
+                  <Pencil className="w-4 h-4 text-ink/40 dark:text-ink-dark/40" />
                 </button>
-                <button onClick={() => setDeleteId(account.id)} className="p-2 rounded-xl hover:bg-red-50 transition-colors">
+                <button onClick={() => setDeleteId(account.id)} className="p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors">
                   <Trash2 className="w-4 h-4 text-red-400" />
                 </button>
               </div>
             </Card>
           ))}
           {accounts.length === 0 && (
-            <p className="text-center text-ink/40 py-8">ยังไม่มีบัญชี กดปุ่มเพิ่มบัญชีแรกของคุณ!</p>
+            <p className="text-center text-ink/40 dark:text-ink-dark/40 py-8">ยังไม่มีบัญชี กดปุ่มเพิ่มบัญชีแรกของคุณ!</p>
           )}
         </div>
       </div>
@@ -186,13 +186,13 @@ export default function AccountsPage() {
       {/* Delete Confirmation Modal */}
       {deleteId && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-xl space-y-4">
+          <div className="bg-white dark:bg-[#333330] rounded-3xl p-6 max-w-sm w-full shadow-xl space-y-4">
             <div className="text-center">
               <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Trash2 className="w-6 h-6 text-red-400" />
               </div>
-              <p className="font-semibold text-ink">ลบบัญชีนี้?</p>
-              <p className="text-sm text-ink/50 mt-1">บัญชีที่มีรายการธุรกรรมอยู่จะไม่สามารถลบได้</p>
+              <p className="font-semibold text-ink dark:text-ink-dark">ลบบัญชีนี้?</p>
+              <p className="text-sm text-ink/50 dark:text-ink-dark/50 mt-1">บัญชีที่มีรายการธุรกรรมอยู่จะไม่สามารถลบได้</p>
             </div>
             <div className="flex gap-3">
               <Button onClick={() => setDeleteId(null)} className="flex-1 !bg-gray-100 !text-ink/70 hover:!bg-gray-200">

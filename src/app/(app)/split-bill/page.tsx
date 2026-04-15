@@ -56,13 +56,13 @@ export default function SplitBillPage() {
 
         {/* Items */}
         <Card>
-          <h3 className="font-semibold text-ink text-sm mb-3">รายการค่าใช้จ่าย</h3>
+          <h3 className="font-semibold text-ink dark:text-ink-dark text-sm mb-3">รายการค่าใช้จ่าย</h3>
           {items.map((item) => (
-            <div key={item.id} className="flex items-center justify-between py-2 border-b border-sakura/10 last:border-0">
-              <span className="text-sm text-ink">{item.name}</span>
+            <div key={item.id} className="flex items-center justify-between py-2 border-b border-sakura/10 dark:border-sakura/5 last:border-0">
+              <span className="text-sm text-ink dark:text-ink-dark">{item.name}</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-ink">{formatCurrency(item.amount)}</span>
-                <button onClick={() => setItems(items.filter((i) => i.id !== item.id))} className="p-1 hover:bg-red-50 rounded-full">
+                <span className="text-sm font-semibold text-ink dark:text-ink-dark">{formatCurrency(item.amount)}</span>
+                <button onClick={() => setItems(items.filter((i) => i.id !== item.id))} className="p-1 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full">
                   <Trash2 className="w-3.5 h-3.5 text-red-400" />
                 </button>
               </div>
@@ -77,7 +77,7 @@ export default function SplitBillPage() {
 
         {/* Friends */}
         <Card>
-          <h3 className="font-semibold text-ink text-sm mb-3">
+          <h3 className="font-semibold text-ink dark:text-ink-dark text-sm mb-3">
             <Users className="w-4 h-4 inline mr-1" /> เพื่อนที่ร่วมหาร
           </h3>
           <div className="flex flex-wrap gap-2 mb-3">
@@ -99,10 +99,10 @@ export default function SplitBillPage() {
         {items.length > 0 && (
           <Card className="bg-gradient-to-r from-mint/20 to-lavender/20 border-none">
             <div className="text-center">
-              <p className="text-sm text-ink/60">ยอดรวม</p>
-              <p className="text-2xl font-bold text-ink">{formatCurrency(totalAmount)}</p>
-              <p className="text-sm text-ink/50 mt-1">
-                คนละ <span className="font-bold text-ink">{formatCurrency(perPerson)}</span> ({friends.length + 1} คน)
+              <p className="text-sm text-ink/60 dark:text-ink-dark/60">ยอดรวม</p>
+              <p className="text-2xl font-bold text-ink dark:text-ink-dark">{formatCurrency(totalAmount)}</p>
+              <p className="text-sm text-ink/50 dark:text-ink-dark/50 mt-1">
+                คนละ <span className="font-bold text-ink dark:text-ink-dark">{formatCurrency(perPerson)}</span> ({friends.length + 1} คน)
               </p>
             </div>
             <Button className="w-full mt-3">บันทึกเป็นรายการ</Button>

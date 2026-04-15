@@ -150,7 +150,7 @@ export default function CategoriesPage() {
       <div className="space-y-4">
         {/* Header */}
         <div className="flex justify-between items-center">
-          <p className="text-sm text-ink/50">
+          <p className="text-sm text-ink/50 dark:text-ink-dark/50">
             หมวดหมู่ทั้งหมด ({categories.length})
           </p>
           <Button
@@ -173,7 +173,7 @@ export default function CategoriesPage() {
               className={`px-4 py-2 rounded-full text-sm border transition-all ${
                 filter === f
                   ? "bg-sakura/20 border-sakura text-sakura-dark"
-                  : "bg-white border-sakura/20 text-ink/50"
+                  : "bg-white dark:bg-[#333330] border-sakura/20 text-ink/50 dark:text-ink-dark/50"
               }`}
             >
               {f === "all" ? "ทั้งหมด" : f === "expense" ? "รายจ่าย" : "รายรับ"}
@@ -185,7 +185,7 @@ export default function CategoriesPage() {
         {showForm && (
           <Card className="space-y-3">
             <div className="flex justify-between items-center">
-              <p className="font-semibold text-ink text-sm">
+              <p className="font-semibold text-ink dark:text-ink-dark text-sm">
                 {editId ? "แก้ไขหมวดหมู่" : "เพิ่มหมวดหมู่ใหม่"}
               </p>
               <button onClick={resetForm}>
@@ -202,7 +202,7 @@ export default function CategoriesPage() {
 
             {/* Type */}
             <div>
-              <label className="block text-sm font-medium text-ink/70 mb-2">
+              <label className="block text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">
                 ประเภท
               </label>
               <div className="flex gap-2">
@@ -214,7 +214,7 @@ export default function CategoriesPage() {
                     className={`px-4 py-2 rounded-full text-sm border transition-all ${
                       type === t
                         ? "bg-sakura/20 border-sakura text-sakura-dark"
-                        : "bg-white border-sakura/20 text-ink/50"
+                        : "bg-white dark:bg-[#333330] border-sakura/20 text-ink/50 dark:text-ink-dark/50"
                     }`}
                   >
                     {t === "expense" ? "รายจ่าย" : "รายรับ"}
@@ -225,7 +225,7 @@ export default function CategoriesPage() {
 
             {/* Icon Picker */}
             <div>
-              <label className="block text-sm font-medium text-ink/70 mb-2">
+              <label className="block text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">
                 ไอคอน
               </label>
               <div className="flex flex-wrap gap-2">
@@ -237,7 +237,7 @@ export default function CategoriesPage() {
                     className={`w-10 h-10 rounded-xl text-lg flex items-center justify-center border transition-all ${
                       icon === i
                         ? "bg-sakura/20 border-sakura scale-110"
-                        : "bg-white border-sakura/10 hover:border-sakura/30"
+                        : "bg-white dark:bg-[#333330] border-sakura/10 hover:border-sakura/30"
                     }`}
                   >
                     {i}
@@ -248,7 +248,7 @@ export default function CategoriesPage() {
 
             {/* Color Picker */}
             <div>
-              <label className="block text-sm font-medium text-ink/70 mb-2">
+              <label className="block text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">
                 สี
               </label>
               <div className="flex flex-wrap gap-2">
@@ -259,7 +259,7 @@ export default function CategoriesPage() {
                     onClick={() => setColor(c)}
                     className={`w-8 h-8 rounded-full border-2 transition-all ${
                       color === c
-                        ? "border-ink scale-110"
+                        ? "border-ink dark:border-ink-dark scale-110"
                         : "border-transparent hover:scale-105"
                     }`}
                     style={{ backgroundColor: c }}
@@ -289,7 +289,7 @@ export default function CategoriesPage() {
                 {cat.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-ink text-sm truncate">
+                <p className="font-semibold text-ink dark:text-ink-dark text-sm truncate">
                   {cat.name}
                 </p>
                 <Badge
@@ -305,13 +305,13 @@ export default function CategoriesPage() {
               <div className="flex gap-1">
                 <button
                   onClick={() => openEdit(cat)}
-                  className="p-2 rounded-xl hover:bg-cream transition-colors"
+                  className="p-2 rounded-xl hover:bg-cream dark:hover:bg-[#3a3a37] transition-colors"
                 >
-                  <Pencil className="w-4 h-4 text-ink/40" />
+                  <Pencil className="w-4 h-4 text-ink/40 dark:text-ink-dark/40" />
                 </button>
                 <button
                   onClick={() => setDeleteId(cat.id)}
-                  className="p-2 rounded-xl hover:bg-red-50 transition-colors"
+                  className="p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
                 >
                   <Trash2 className="w-4 h-4 text-red-400" />
                 </button>
@@ -319,7 +319,7 @@ export default function CategoriesPage() {
             </Card>
           ))}
           {filtered.length === 0 && (
-            <p className="text-center text-ink/40 py-8">
+            <p className="text-center text-ink/40 dark:text-ink-dark/40 py-8">
               {filter === "all"
                 ? "ยังไม่มีหมวดหมู่ กดเพิ่มหมวดหมู่แรกของคุณ!"
                 : "ไม่มีหมวดหมู่ในประเภทนี้"}
@@ -331,13 +331,13 @@ export default function CategoriesPage() {
       {/* Delete Confirmation Modal */}
       {deleteId && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 max-w-sm w-full shadow-xl space-y-4">
+          <div className="bg-white dark:bg-[#333330] rounded-3xl p-6 max-w-sm w-full shadow-xl space-y-4">
             <div className="text-center">
-              <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 bg-red-50 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Trash2 className="w-6 h-6 text-red-400" />
               </div>
-              <p className="font-semibold text-ink">ลบหมวดหมู่นี้?</p>
-              <p className="text-sm text-ink/50 mt-1">หมวดหมู่ที่ลบแล้วจะไม่สามารถกู้คืนได้</p>
+              <p className="font-semibold text-ink dark:text-ink-dark">ลบหมวดหมู่นี้?</p>
+              <p className="text-sm text-ink/50 dark:text-ink-dark/50 mt-1">หมวดหมู่ที่ลบแล้วจะไม่สามารถกู้คืนได้</p>
             </div>
             <div className="flex gap-3">
               <Button

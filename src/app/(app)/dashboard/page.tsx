@@ -49,7 +49,7 @@ export default function DashboardPage() {
   if (!data) {
     return (
       <AppLayout title="Dashboard">
-        <div className="text-center py-20 text-ink/50">ไม่สามารถโหลดข้อมูลได้</div>
+        <div className="text-center py-20 text-ink/50 dark:text-ink-dark/50">ไม่สามารถโหลดข้อมูลได้</div>
       </AppLayout>
     );
   }
@@ -59,16 +59,16 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Total Balance Card */}
         <Card className="bg-gradient-to-br from-sakura/40 via-lavender/20 to-mint/20 border-none">
-          <p className="text-sm text-ink/60 font-medium">ยอดเงินทั้งหมด</p>
-          <p className="text-3xl font-bold text-ink mt-1">
+          <p className="text-sm text-ink/60 dark:text-ink-dark/60 font-medium">ยอดเงินทั้งหมด</p>
+          <p className="text-3xl font-bold text-ink dark:text-ink-dark mt-1">
             {formatCurrency(data.totalBalance)}
           </p>
-          <div className="flex gap-4 mt-3">
+          <div className="flex flex-wrap gap-3 sm:gap-4 mt-3">
             <div className="flex items-center gap-1.5 text-sm">
               <div className="w-6 h-6 rounded-full bg-mint/30 flex items-center justify-center">
                 <TrendingUp className="w-3.5 h-3.5 text-green-600" />
               </div>
-              <span className="text-ink/60">รายรับ</span>
+              <span className="text-ink/60 dark:text-ink-dark/60">รายรับ</span>
               <span className="font-semibold text-green-600">
                 {formatCurrency(data.monthlyIncome)}
               </span>
@@ -77,7 +77,7 @@ export default function DashboardPage() {
               <div className="w-6 h-6 rounded-full bg-sakura/30 flex items-center justify-center">
                 <TrendingDown className="w-3.5 h-3.5 text-sakura-dark" />
               </div>
-              <span className="text-ink/60">รายจ่าย</span>
+              <span className="text-ink/60 dark:text-ink-dark/60">รายจ่าย</span>
               <span className="font-semibold text-sakura-dark">
                 {formatCurrency(data.monthlyExpense)}
               </span>
@@ -98,9 +98,9 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {data.recentTransactions.length === 0 ? (
-              <p className="text-sm text-ink/40 text-center py-4">ยังไม่มีรายการ</p>
+              <p className="text-sm text-ink/40 dark:text-ink-dark/40 text-center py-4">ยังไม่มีรายการ</p>
             ) : (
-              <div className="divide-y divide-sakura/10">
+              <div className="divide-y divide-sakura/10 dark:divide-sakura/5">
                 {data.recentTransactions.map((tx) => (
                   <div key={tx.id} className="flex items-center gap-3 py-3">
                     <div
@@ -110,10 +110,10 @@ export default function DashboardPage() {
                       {tx.type === "income" ? "💰" : "🛒"}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-ink truncate">
+                      <p className="text-sm font-medium text-ink dark:text-ink-dark truncate">
                         {tx.note || "ไม่มีรายละเอียด"}
                       </p>
-                      <p className="text-xs text-ink/40">
+                      <p className="text-xs text-ink/40 dark:text-ink-dark/40">
                         {tx.category?.name || "ไม่มีหมวด"} •{" "}
                         {new Date(tx.date).toLocaleDateString("th-TH", {
                           day: "numeric",
@@ -155,7 +155,7 @@ export default function DashboardPage() {
                   <div key={budget.id}>
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-ink">
+                        <span className="text-sm font-medium text-ink dark:text-ink-dark">
                           {budget.category.name}
                         </span>
                         {pct >= 80 && (
@@ -164,11 +164,11 @@ export default function DashboardPage() {
                           </Badge>
                         )}
                       </div>
-                      <span className="text-xs text-ink/50">
+                      <span className="text-xs text-ink/50 dark:text-ink-dark/50">
                         {formatCurrency(budget.spent)} / {formatCurrency(budget.amount)}
                       </span>
                     </div>
-                    <div className="w-full h-2.5 bg-cream rounded-full overflow-hidden">
+                    <div className="w-full h-2.5 bg-cream dark:bg-cream-dark rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${getBudgetBgColor(pct)}`}
                         style={{ width: `${Math.min(pct, 100)}%` }}
@@ -201,10 +201,10 @@ export default function DashboardPage() {
                 <Sparkles className="w-5 h-5 text-purple-500" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-ink mb-1">
+                <p className="text-sm font-semibold text-ink dark:text-ink-dark mb-1">
                   🍡 Mochi Insight
                 </p>
-                <p className="text-sm text-ink/70 leading-relaxed">
+                <p className="text-sm text-ink/70 dark:text-ink-dark/70 leading-relaxed">
                   {insight}
                 </p>
               </div>
@@ -215,7 +215,7 @@ export default function DashboardPage() {
         {/* Account Cards */}
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-ink">บัญชีของคุณ</h3>
+            <h3 className="font-semibold text-ink dark:text-ink-dark">บัญชีของคุณ</h3>
             <Link
               href="/accounts"
               className="text-xs text-sakura-dark hover:underline flex items-center gap-1"
@@ -224,7 +224,7 @@ export default function DashboardPage() {
             </Link>
           </div>
           {data.accounts.length === 0 ? (
-            <p className="text-sm text-ink/40 text-center py-4">ยังไม่มีบัญชี เพิ่มบัญชีแรกได้ที่หน้าบัญชี</p>
+            <p className="text-sm text-ink/40 dark:text-ink-dark/40 text-center py-4">ยังไม่มีบัญชี เพิ่มบัญชีแรกได้ที่หน้าบัญชี</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {data.accounts.map((account) => (
@@ -233,8 +233,8 @@ export default function DashboardPage() {
                     className="absolute top-0 right-0 w-20 h-20 rounded-full opacity-20 -translate-y-1/2 translate-x-1/2"
                     style={{ backgroundColor: account.color }}
                   />
-                  <p className="text-xs text-ink/50 font-medium">{account.name}</p>
-                  <p className="text-lg font-bold text-ink mt-1">
+                  <p className="text-xs text-ink/50 dark:text-ink-dark/50 font-medium">{account.name}</p>
+                  <p className="text-lg font-bold text-ink dark:text-ink-dark mt-1">
                     {formatCurrency(account.balance)}
                   </p>
                   <Badge className="mt-2">

@@ -42,17 +42,17 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-cream px-4">
+    <main className="min-h-screen flex items-center justify-center bg-cream dark:bg-cream-dark px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="text-5xl mb-3">🍡</div>
-          <h1 className="text-2xl font-bold text-ink">ยินดีต้อนรับกลับ!</h1>
-          <p className="text-ink/50 text-sm mt-1">เข้าสู่ระบบเพื่อจัดการเงินของคุณ</p>
+          <h1 className="text-2xl font-bold text-ink dark:text-ink-dark">ยินดีต้อนรับกลับ!</h1>
+          <p className="text-ink/50 dark:text-ink-dark/50 text-sm mt-1">เข้าสู่ระบบเพื่อจัดการเงินของคุณ</p>
         </div>
 
         <button
           onClick={handleGoogleLogin}
-          className="w-full flex items-center justify-center gap-3 bg-white border border-sakura/30 rounded-2xl px-4 py-3 text-sm font-medium text-ink hover:bg-cream transition-all mb-4"
+          className="w-full flex items-center justify-center gap-3 bg-white dark:bg-[#333330] border border-sakura/30 dark:border-sakura/20 rounded-2xl px-4 py-3 text-sm font-medium text-ink dark:text-ink-dark hover:bg-cream dark:hover:bg-[#3a3a37] transition-all mb-4"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
@@ -65,7 +65,7 @@ export default function LoginPage() {
 
         <div className="flex items-center gap-3 my-6">
           <div className="flex-1 h-px bg-sakura/20" />
-          <span className="text-xs text-ink/40">หรือ</span>
+          <span className="text-xs text-ink/40 dark:text-ink-dark/40">หรือ</span>
           <div className="flex-1 h-px bg-sakura/20" />
         </div>
 
@@ -91,7 +91,7 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-ink/50 mt-6">
+        <p className="text-center text-sm text-ink/50 dark:text-ink-dark/50 mt-6">
           ยังไม่มีบัญชี?{" "}
           <Link href="/register" className="text-sakura-dark hover:underline font-medium">
             สร้างบัญชีใหม่

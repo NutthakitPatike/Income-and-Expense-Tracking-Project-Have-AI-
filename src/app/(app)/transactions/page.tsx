@@ -61,7 +61,7 @@ export default function TransactionsPage() {
         {/* Search & Filter Bar */}
         <div className="flex flex-col sm:flex-row gap-2">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/40" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-ink/40 dark:text-ink-dark/40" />
             <input
               type="text"
               placeholder="ค้นหารายการ..."
@@ -78,7 +78,7 @@ export default function TransactionsPage() {
                 className={`px-4 py-2 rounded-2xl text-sm font-medium border transition-all ${
                   filterType === type
                     ? "bg-sakura/20 border-sakura text-sakura-dark"
-                    : "bg-white border-sakura/20 text-ink/50 hover:bg-cream"
+                    : "bg-white dark:bg-[#333330] border-sakura/20 text-ink/50 dark:text-ink-dark/50 hover:bg-cream dark:hover:bg-[#3a3a37]"
                 }`}
               >
                 {type === "all" ? "ทั้งหมด" : type === "income" ? "รายรับ" : "รายจ่าย"}
@@ -103,7 +103,7 @@ export default function TransactionsPage() {
           />
         ) : (
           <Card>
-            <div className="divide-y divide-sakura/10">
+            <div className="divide-y divide-sakura/10 dark:divide-sakura/5">
               {filtered.map((tx) => (
                 <div key={tx.id} className="flex items-center gap-3 py-3 group">
                   <div
@@ -113,8 +113,8 @@ export default function TransactionsPage() {
                     {tx.type === "income" ? "💰" : "🛒"}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-ink truncate">{tx.note || "ไม่มีรายละเอียด"}</p>
-                    <p className="text-xs text-ink/40">
+                    <p className="text-sm font-medium text-ink dark:text-ink-dark truncate">{tx.note || "ไม่มีรายละเอียด"}</p>
+                    <p className="text-xs text-ink/40 dark:text-ink-dark/40">
                       {tx.category?.name || "ไม่มีหมวด"} •{" "}
                       {new Date(tx.date).toLocaleDateString("th-TH", {
                         day: "numeric",
@@ -132,7 +132,7 @@ export default function TransactionsPage() {
                   </span>
                   <button
                     onClick={() => handleDelete(tx.id)}
-                    className="p-1.5 rounded-full hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30 opacity-0 group-hover:opacity-100 transition-opacity"
                   >
                     <Trash2 className="w-3.5 h-3.5 text-red-400" />
                   </button>

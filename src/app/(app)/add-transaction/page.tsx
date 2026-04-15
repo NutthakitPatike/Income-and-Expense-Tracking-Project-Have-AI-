@@ -77,7 +77,7 @@ export default function AddTransactionPage() {
     <AppLayout title="เพิ่มรายการ">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Type Toggle */}
-        <div className="flex rounded-2xl bg-cream p-1">
+        <div className="flex rounded-2xl bg-cream dark:bg-cream-dark p-1">
           <button
             type="button"
             onClick={() => { setType("expense"); setCategoryId(""); }}
@@ -85,7 +85,7 @@ export default function AddTransactionPage() {
               "flex-1 py-2.5 rounded-xl text-sm font-medium transition-all",
               type === "expense"
                 ? "bg-sakura/30 text-sakura-dark shadow-sm"
-                : "text-ink/50 hover:text-ink"
+                : "text-ink/50 dark:text-ink-dark/50 hover:text-ink dark:hover:text-ink-dark"
             )}
           >
             รายจ่าย 💸
@@ -97,7 +97,7 @@ export default function AddTransactionPage() {
               "flex-1 py-2.5 rounded-xl text-sm font-medium transition-all",
               type === "income"
                 ? "bg-mint/30 text-green-700 shadow-sm"
-                : "text-ink/50 hover:text-ink"
+                : "text-ink/50 dark:text-ink-dark/50 hover:text-ink dark:hover:text-ink-dark"
             )}
           >
             รายรับ 💰
@@ -106,22 +106,22 @@ export default function AddTransactionPage() {
 
         {/* Amount */}
         <Card className="text-center py-6">
-          <p className="text-sm text-ink/50 mb-2">จำนวนเงิน (บาท)</p>
+          <p className="text-sm text-ink/50 dark:text-ink-dark/50 mb-2">จำนวนเงิน (บาท)</p>
           <input
             type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="0"
-            className="text-4xl font-bold text-ink text-center bg-transparent outline-none w-full"
+            className="text-4xl font-bold text-ink dark:text-ink-dark text-center bg-transparent outline-none w-full"
             required
           />
         </Card>
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-ink/70 mb-2">หมวดหมู่</label>
+          <label className="block text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">หมวดหมู่</label>
           {filteredCategories.length === 0 ? (
-            <p className="text-sm text-ink/40">ยังไม่มีหมวดหมู่ กรุณาทำ Onboarding ก่อน</p>
+            <p className="text-sm text-ink/40 dark:text-ink-dark/40">ยังไม่มีหมวดหมู่ กรุณาทำ Onboarding ก่อน</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {filteredCategories.map((cat) => (
@@ -135,7 +135,7 @@ export default function AddTransactionPage() {
                       ? type === "expense"
                         ? "border-sakura bg-sakura/10 text-sakura-dark"
                         : "border-mint bg-mint/10 text-green-700"
-                      : "border-sakura/20 bg-white text-ink/50 hover:bg-cream"
+                      : "border-sakura/20 bg-white dark:bg-[#333330] text-ink/50 dark:text-ink-dark/50 hover:bg-cream dark:hover:bg-[#3a3a37]"
                   )}
                 >
                   {cat.name}
@@ -147,9 +147,9 @@ export default function AddTransactionPage() {
 
         {/* Account */}
         <div>
-          <label className="block text-sm font-medium text-ink/70 mb-2">บัญชี</label>
+          <label className="block text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">บัญชี</label>
           {accounts.length === 0 ? (
-            <p className="text-sm text-ink/40">ยังไม่มีบัญชี กรุณาเพิ่มบัญชีก่อน</p>
+            <p className="text-sm text-ink/40 dark:text-ink-dark/40">ยังไม่มีบัญชี กรุณาเพิ่มบัญชีก่อน</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {accounts.map((acc) => (
@@ -161,7 +161,7 @@ export default function AddTransactionPage() {
                     "px-3 py-2 rounded-full text-sm border transition-all",
                     accountId === acc.id
                       ? "border-lavender bg-lavender/10 text-purple-700"
-                      : "border-sakura/20 bg-white text-ink/50 hover:bg-cream"
+                      : "border-sakura/20 bg-white dark:bg-[#333330] text-ink/50 dark:text-ink-dark/50 hover:bg-cream dark:hover:bg-[#3a3a37]"
                   )}
                 >
                   {acc.name}

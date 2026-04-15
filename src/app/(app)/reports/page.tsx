@@ -36,15 +36,15 @@ export default function ReportsPage() {
         {/* Monthly Summary */}
         <div className="grid grid-cols-3 gap-3">
           <Card className="text-center">
-            <p className="text-xs text-ink/50">รายรับ</p>
+            <p className="text-xs text-ink/50 dark:text-ink-dark/50">รายรับ</p>
             <p className="text-lg font-bold text-green-600 mt-1">{formatCurrency(totalIncome)}</p>
           </Card>
           <Card className="text-center">
-            <p className="text-xs text-ink/50">รายจ่าย</p>
+            <p className="text-xs text-ink/50 dark:text-ink-dark/50">รายจ่าย</p>
             <p className="text-lg font-bold text-sakura-dark mt-1">{formatCurrency(totalExpense)}</p>
           </Card>
           <Card className="text-center">
-            <p className="text-xs text-ink/50">คงเหลือ</p>
+            <p className="text-xs text-ink/50 dark:text-ink-dark/50">คงเหลือ</p>
             <p className={`text-lg font-bold mt-1 ${net >= 0 ? "text-green-600" : "text-red-500"}`}>
               {formatCurrency(net)}
             </p>
@@ -60,7 +60,7 @@ export default function ReportsPage() {
         )}
 
         {totalIncome === 0 && totalExpense === 0 && (
-          <p className="text-center text-ink/40 py-8">ยังไม่มีข้อมูลรายการ เพิ่มรายการแรกเพื่อดูรายงาน!</p>
+          <p className="text-center text-ink/40 dark:text-ink-dark/40 py-8">ยังไม่มีข้อมูลรายการ เพิ่มรายการแรกเพื่อดูรายงาน!</p>
         )}
       </div>
     </AppLayout>

@@ -76,8 +76,8 @@ export default function ImportPage() {
               <Upload className="w-7 h-7 text-sakura-dark" />
             </div>
             <div>
-              <p className="font-semibold text-ink">อัพโหลดไฟล์ CSV</p>
-              <p className="text-xs text-ink/40 mt-1">รองรับไฟล์ CSV จากธนาคาร</p>
+              <p className="font-semibold text-ink dark:text-ink-dark">อัพโหลดไฟล์ CSV</p>
+              <p className="text-xs text-ink/40 dark:text-ink-dark/40 mt-1">รองรับไฟล์ CSV จากธนาคาร</p>
             </div>
             <input type="file" accept=".csv" onChange={handleFileChange} className="hidden" />
           </label>
@@ -87,11 +87,11 @@ export default function ImportPage() {
           <>
             {/* Account selector */}
             <Card>
-              <label className="block text-sm font-medium text-ink/70 mb-2">นำเข้าเข้าบัญชี</label>
+              <label className="block text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">นำเข้าเข้าบัญชี</label>
               <div className="flex flex-wrap gap-2">
                 {accounts.map((acc) => (
                   <button key={acc.id} type="button" onClick={() => setAccountId(acc.id)}
-                    className={`px-3 py-2 rounded-full text-sm border transition-all ${accountId === acc.id ? "bg-lavender/20 border-lavender text-purple-700" : "bg-white border-sakura/20 text-ink/50"}`}
+                    className={`px-3 py-2 rounded-full text-sm border transition-all ${accountId === acc.id ? "bg-lavender/20 border-lavender text-purple-700" : "bg-white dark:bg-[#333330] border-sakura/20 text-ink/50 dark:text-ink-dark/50"}`}
                   >{acc.name}</button>
                 ))}
               </div>
@@ -101,8 +101,8 @@ export default function ImportPage() {
               <div className="flex items-center gap-3 mb-3">
                 <FileSpreadsheet className="w-5 h-5 text-mint" />
                 <div>
-                  <p className="text-sm font-medium text-ink">{file.name}</p>
-                  <p className="text-xs text-ink/40">{preview.length} บรรทัด (แสดง 10 บรรทัดแรก)</p>
+                  <p className="text-sm font-medium text-ink dark:text-ink-dark">{file.name}</p>
+                  <p className="text-xs text-ink/40 dark:text-ink-dark/40">{preview.length} บรรทัด (แสดง 10 บรรทัดแรก)</p>
                 </div>
               </div>
               <div className="overflow-x-auto">
@@ -111,7 +111,7 @@ export default function ImportPage() {
                     {preview.map((row, i) => (
                       <tr key={i} className="border-b border-sakura/5">
                         {row.map((cell, j) => (
-                          <td key={j} className="py-2 pr-4 text-ink/70">{cell}</td>
+                          <td key={j} className="py-2 pr-4 text-ink/70 dark:text-ink-dark/70">{cell}</td>
                         ))}
                       </tr>
                     ))}

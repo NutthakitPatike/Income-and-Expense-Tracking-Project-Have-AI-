@@ -55,7 +55,7 @@ export default function NotificationsPage() {
     <AppLayout title="แจ้งเตือน">
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <p className="text-sm text-ink/50">
+          <p className="text-sm text-ink/50 dark:text-ink-dark/50">
             {notifications.filter((n) => !n.isRead).length} รายการที่ยังไม่อ่าน
           </p>
           <Button variant="ghost" size="sm" onClick={markAllRead}>
@@ -64,7 +64,7 @@ export default function NotificationsPage() {
         </div>
 
         {notifications.length === 0 ? (
-          <p className="text-center text-ink/40 py-8">ไม่มีการแจ้งเตือน</p>
+          <p className="text-center text-ink/40 dark:text-ink-dark/40 py-8">ไม่มีการแจ้งเตือน</p>
         ) : (
           <div className="space-y-2">
             {notifications.map((notif) => (
@@ -75,14 +75,14 @@ export default function NotificationsPage() {
                   !notif.isRead && "bg-sakura/5 border-sakura/30"
                 )}
               >
-                <div className="w-10 h-10 rounded-full bg-cream flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-full bg-cream dark:bg-cream-dark flex items-center justify-center flex-shrink-0">
                   {iconMap[notif.type] || <Bell className="w-5 h-5" />}
                 </div>
                 <div className="flex-1">
-                  <p className={cn("text-sm", !notif.isRead ? "font-semibold text-ink" : "text-ink/70")}>
+                  <p className={cn("text-sm", !notif.isRead ? "font-semibold text-ink dark:text-ink-dark" : "text-ink/70 dark:text-ink-dark/70")}>
                     {notif.message}
                   </p>
-                  <p className="text-xs text-ink/40 mt-1">
+                  <p className="text-xs text-ink/40 dark:text-ink-dark/40 mt-1">
                     {new Date(notif.createdAt).toLocaleDateString("th-TH", {
                       day: "numeric",
                       month: "short",

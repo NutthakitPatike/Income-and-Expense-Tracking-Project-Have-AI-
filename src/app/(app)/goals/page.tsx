@@ -84,7 +84,7 @@ export default function GoalsPage() {
     <AppLayout title="เป้าหมายออม">
       <div className="space-y-4">
         <div className="flex justify-between items-center">
-          <p className="text-sm text-ink/50">เป้าหมายการออมของคุณ</p>
+          <p className="text-sm text-ink/50 dark:text-ink-dark/50">เป้าหมายการออมของคุณ</p>
           <Button size="sm" onClick={() => setShowForm(true)}>
             <Plus className="w-4 h-4" /> เพิ่มเป้าหมาย
           </Button>
@@ -93,7 +93,7 @@ export default function GoalsPage() {
         {showForm && (
           <Card className="space-y-3">
             <div className="flex justify-between items-center">
-              <p className="font-semibold text-ink text-sm">เพิ่มเป้าหมายใหม่</p>
+              <p className="font-semibold text-ink dark:text-ink-dark text-sm">เพิ่มเป้าหมายใหม่</p>
               <button onClick={() => setShowForm(false)}><X className="w-4 h-4 text-ink/40" /></button>
             </div>
             <Input label="ชื่อเป้าหมาย" value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="เช่น iPhone 16, ท่องเที่ยวญี่ปุ่น" />
@@ -106,7 +106,7 @@ export default function GoalsPage() {
         )}
 
         {goals.length === 0 ? (
-          <p className="text-center text-ink/40 py-8">ยังไม่มีเป้าหมาย กดเพิ่มเป้าหมายแรกได้เลย!</p>
+          <p className="text-center text-ink/40 dark:text-ink-dark/40 py-8">ยังไม่มีเป้าหมาย กดเพิ่มเป้าหมายแรกได้เลย!</p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2">
             {goals.map((goal) => {
@@ -115,15 +115,15 @@ export default function GoalsPage() {
                 <Card key={goal.id}>
                   <div className="flex items-center gap-4">
                     <ProgressRing percentage={pct} size={72} color={goal.color || "#F4C0D1"}>
-                      <span className="text-xs font-bold text-ink">{pct}%</span>
+                      <span className="text-xs font-bold text-ink dark:text-ink-dark">{pct}%</span>
                     </ProgressRing>
                     <div className="flex-1">
-                      <p className="font-semibold text-ink">{goal.name}</p>
-                      <p className="text-sm text-ink/50 mt-0.5">
+                      <p className="font-semibold text-ink dark:text-ink-dark">{goal.name}</p>
+                      <p className="text-sm text-ink/50 dark:text-ink-dark/50 mt-0.5">
                         {formatCurrency(goal.currentAmount)} / {formatCurrency(goal.targetAmount)}
                       </p>
                       {goal.deadline && (
-                        <div className="flex items-center gap-1 mt-1.5 text-xs text-ink/40">
+                        <div className="flex items-center gap-1 mt-1.5 text-xs text-ink/40 dark:text-ink-dark/40">
                           <Calendar className="w-3 h-3" />
                           <span>
                             กำหนด{" "}
@@ -149,7 +149,7 @@ export default function GoalsPage() {
                       <Button variant="secondary" size="sm" className="flex-1" onClick={() => setAddAmountId(goal.id)}>
                         เพิ่มเงิน
                       </Button>
-                      <button onClick={() => handleDelete(goal.id)} className="p-2 rounded-xl hover:bg-red-50">
+                      <button onClick={() => handleDelete(goal.id)} className="p-2 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30">
                         <Trash2 className="w-4 h-4 text-red-400" />
                       </button>
                     </div>
