@@ -2,8 +2,10 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
+const COLORS = ["#F4C0D1", "#CECBF6", "#9FE1CB", "#FAC775", "#87CEEB", "#FF9999", "#FFB366", "#B399FF"];
+
 interface DonutChartProps {
-  data: Array<{ name: string; value: number; color: string }>;
+  data: Array<{ name: string; value: number; color?: string }>;
 }
 
 export function DonutChart({ data }: DonutChartProps) {
@@ -24,7 +26,7 @@ export function DonutChart({ data }: DonutChartProps) {
             stroke="none"
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
+              <Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} />
             ))}
           </Pie>
           <Tooltip

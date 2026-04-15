@@ -1,18 +1,33 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { BarChartComponent } from "@/components/charts/BarChart";
 import { DonutChart } from "@/components/charts/DonutChart";
-import { LineChartComponent } from "@/components/charts/LineChart";
-import { mockChartData } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
-import { Download } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export default function ReportsPage() {
-  const totalIncome = mockChartData.incomeVsExpense.reduce((s, d) => s + d.income, 0);
-  const totalExpense = mockChartData.incomeVsExpense.reduce((s, d) => s + d.expense, 0);
+  const [data, setData] = useState<{
+    monthlyIncome: number;
+    monthlyExpense: number;
+    expenseBreakdown: { name: string; value: number }[];
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/dashboard").then((r) => r.json()).then((d) => {
+      setData(d);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <AppLayout title="รายงาน"><div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-sakura" /></div></AppLayout>;
+  }
+
+  const totalIncome = data?.monthlyIncome || 0;
+  const totalExpense = data?.monthlyExpense || 0;
   const net = totalIncome - totalExpense;
 
   return (
@@ -36,32 +51,17 @@ export default function ReportsPage() {
           </Card>
         </div>
 
-        {/* Income vs Expense */}
-        <Card>
-          <CardHeader><CardTitle>รายรับ vs รายจ่าย (6 เดือน)</CardTitle></CardHeader>
-          <CardContent><BarChartComponent data={mockChartData.incomeVsExpense} /></CardContent>
-        </Card>
-
         {/* Expense Breakdown */}
-        <Card>
-          <CardHeader><CardTitle>สัดส่วนรายจ่าย</CardTitle></CardHeader>
-          <CardContent><DonutChart data={mockChartData.expenseByCategory} /></CardContent>
-        </Card>
+        {data?.expenseBreakdown && data.expenseBreakdown.length > 0 && (
+          <Card>
+            <CardHeader><CardTitle>สัดส่วนรายจ่ายเดือนนี้</CardTitle></CardHeader>
+            <CardContent><DonutChart data={data.expenseBreakdown} /></CardContent>
+          </Card>
+        )}
 
-        {/* Spending Trend */}
-        <Card>
-          <CardHeader><CardTitle>แนวโน้มรายจ่าย</CardTitle></CardHeader>
-          <CardContent>
-            <LineChartComponent
-              data={mockChartData.incomeVsExpense.map((d) => ({ month: d.month, expense: d.expense }))}
-            />
-          </CardContent>
-        </Card>
-
-        {/* Export */}
-        <Button variant="secondary" className="w-full">
-          <Download className="w-4 h-4" /> Export PDF
-        </Button>
+        {totalIncome === 0 && totalExpense === 0 && (
+          <p className="text-center text-ink/40 py-8">ยังไม่มีข้อมูลรายการ เพิ่มรายการแรกเพื่อดูรายงาน!</p>
+        )}
       </div>
     </AppLayout>
   );

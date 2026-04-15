@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { mockNotifications } from "@/lib/mock-data";
-import { Bell, CheckCheck, AlertTriangle, Target } from "lucide-react";
+import { Bell, CheckCheck, AlertTriangle, Target, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import toast from "react-hot-toast";
 
 const iconMap: Record<string, React.ReactNode> = {
   budget_warning: <AlertTriangle className="w-5 h-5 text-peach" />,
@@ -14,12 +14,42 @@ const iconMap: Record<string, React.ReactNode> = {
   system: <Bell className="w-5 h-5 text-lavender" />,
 };
 
-export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState(mockNotifications);
+interface Notification {
+  id: string;
+  type: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+}
 
-  const markAllRead = () => {
-    setNotifications(notifications.map((n) => ({ ...n, isRead: true })));
+export default function NotificationsPage() {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchNotifs = () => {
+    fetch("/api/notifications").then((r) => r.json()).then((d) => {
+      setNotifications(Array.isArray(d) ? d : []);
+      setLoading(false);
+    }).catch(() => setLoading(false));
   };
+
+  useEffect(() => { fetchNotifs(); }, []);
+
+  const markAllRead = async () => {
+    const res = await fetch("/api/notifications", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ markAll: true }),
+    });
+    if (res.ok) {
+      setNotifications(notifications.map((n) => ({ ...n, isRead: true })));
+      toast.success("อ่านทั้งหมดแล้ว");
+    }
+  };
+
+  if (loading) {
+    return <AppLayout title="แจ้งเตือน"><div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-sakura" /></div></AppLayout>;
+  }
 
   return (
     <AppLayout title="แจ้งเตือน">
@@ -33,37 +63,41 @@ export default function NotificationsPage() {
           </Button>
         </div>
 
-        <div className="space-y-2">
-          {notifications.map((notif) => (
-            <Card
-              key={notif.id}
-              className={cn(
-                "flex items-start gap-3 transition-all",
-                !notif.isRead && "bg-sakura/5 border-sakura/30"
-              )}
-            >
-              <div className="w-10 h-10 rounded-full bg-cream flex items-center justify-center flex-shrink-0">
-                {iconMap[notif.type] || <Bell className="w-5 h-5" />}
-              </div>
-              <div className="flex-1">
-                <p className={cn("text-sm", !notif.isRead ? "font-semibold text-ink" : "text-ink/70")}>
-                  {notif.message}
-                </p>
-                <p className="text-xs text-ink/40 mt-1">
-                  {new Date(notif.createdAt).toLocaleDateString("th-TH", {
-                    day: "numeric",
-                    month: "short",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </p>
-              </div>
-              {!notif.isRead && (
-                <div className="w-2 h-2 rounded-full bg-sakura flex-shrink-0 mt-2" />
-              )}
-            </Card>
-          ))}
-        </div>
+        {notifications.length === 0 ? (
+          <p className="text-center text-ink/40 py-8">ไม่มีการแจ้งเตือน</p>
+        ) : (
+          <div className="space-y-2">
+            {notifications.map((notif) => (
+              <Card
+                key={notif.id}
+                className={cn(
+                  "flex items-start gap-3 transition-all",
+                  !notif.isRead && "bg-sakura/5 border-sakura/30"
+                )}
+              >
+                <div className="w-10 h-10 rounded-full bg-cream flex items-center justify-center flex-shrink-0">
+                  {iconMap[notif.type] || <Bell className="w-5 h-5" />}
+                </div>
+                <div className="flex-1">
+                  <p className={cn("text-sm", !notif.isRead ? "font-semibold text-ink" : "text-ink/70")}>
+                    {notif.message}
+                  </p>
+                  <p className="text-xs text-ink/40 mt-1">
+                    {new Date(notif.createdAt).toLocaleDateString("th-TH", {
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                </div>
+                {!notif.isRead && (
+                  <div className="w-2 h-2 rounded-full bg-sakura flex-shrink-0 mt-2" />
+                )}
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </AppLayout>
   );

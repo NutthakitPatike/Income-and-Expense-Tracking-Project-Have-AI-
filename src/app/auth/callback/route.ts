@@ -7,6 +7,14 @@ export async function GET(request: Request) {
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/dashboard";
 
+  // Handle OAuth provider error
+  const errorParam = searchParams.get("error");
+  const errorDesc = searchParams.get("error_description");
+  if (errorParam) {
+    console.error("[Auth Callback] Provider error:", errorParam, errorDesc);
+    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(errorDesc || errorParam)}`);
+  }
+
   if (code) {
     const cookieStore = cookies();
     const supabase = createServerClient(
@@ -32,7 +40,10 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`);
     }
+    console.error("[Auth Callback] exchangeCodeForSession error:", error.message);
+    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(error.message)}`);
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth_failed`);
+  console.error("[Auth Callback] No code received. Params:", Object.fromEntries(searchParams));
+  return NextResponse.redirect(`${origin}/login?error=no_code`);
 }

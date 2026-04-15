@@ -1,25 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { mockTransactions, mockCategories } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
-import { Search, Filter, Download, Pencil, Trash2 } from "lucide-react";
+import { Search, Trash2, Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
+import Link from "next/link";
+
+interface Transaction {
+  id: string;
+  note: string;
+  amount: number;
+  type: string;
+  date: string;
+  category?: { name: string; color: string };
+}
 
 export default function TransactionsPage() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState<string>("all");
 
-  const filtered = mockTransactions.filter((tx) => {
+  const fetchTx = () => {
+    fetch("/api/transactions").then((r) => r.json()).then((d) => {
+      setTransactions(Array.isArray(d) ? d : []);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  };
+
+  useEffect(() => { fetchTx(); }, []);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("ลบรายการนี้?")) return;
+    const res = await fetch(`/api/transactions/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      toast.success("ลบรายการแล้ว");
+      fetchTx();
+    } else {
+      toast.error("ลบไม่สำเร็จ");
+    }
+  };
+
+  const filtered = transactions.filter((tx) => {
     const matchSearch = !search || tx.note?.toLowerCase().includes(search.toLowerCase());
     const matchType = filterType === "all" || tx.type === filterType;
     return matchSearch && matchType;
   });
+
+  if (loading) {
+    return <AppLayout title="รายการทั้งหมด"><div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-sakura" /></div></AppLayout>;
+  }
 
   return (
     <AppLayout title="รายการทั้งหมด">
@@ -53,11 +87,11 @@ export default function TransactionsPage() {
           </div>
         </div>
 
-        {/* Export Button */}
+        {/* Add button */}
         <div className="flex justify-end">
-          <Button variant="secondary" size="sm">
-            <Download className="w-4 h-4" /> Export CSV
-          </Button>
+          <Link href="/add-transaction">
+            <Button size="sm">เพิ่มรายการ</Button>
+          </Link>
         </div>
 
         {/* Transaction List */}
@@ -65,7 +99,7 @@ export default function TransactionsPage() {
           <EmptyState
             icon="🔍"
             title="ไม่พบรายการ"
-            description="ลองเปลี่ยนคำค้นหาหรือตัวกรอง"
+            description="เพิ่มรายการแรกของคุณได้เลย!"
           />
         ) : (
           <Card>
@@ -74,14 +108,14 @@ export default function TransactionsPage() {
                 <div key={tx.id} className="flex items-center gap-3 py-3 group">
                   <div
                     className="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0"
-                    style={{ backgroundColor: `${tx.category?.color}30` }}
+                    style={{ backgroundColor: `${tx.category?.color || '#F4C0D1'}30` }}
                   >
                     {tx.type === "income" ? "💰" : "🛒"}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-ink truncate">{tx.note}</p>
+                    <p className="text-sm font-medium text-ink truncate">{tx.note || "ไม่มีรายละเอียด"}</p>
                     <p className="text-xs text-ink/40">
-                      {tx.category?.name} •{" "}
+                      {tx.category?.name || "ไม่มีหมวด"} •{" "}
                       {new Date(tx.date).toLocaleDateString("th-TH", {
                         day: "numeric",
                         month: "short",
@@ -96,14 +130,12 @@ export default function TransactionsPage() {
                   >
                     {tx.type === "income" ? "+" : "-"}{formatCurrency(tx.amount)}
                   </span>
-                  <div className="hidden group-hover:flex items-center gap-1">
-                    <button className="p-1.5 rounded-full hover:bg-cream">
-                      <Pencil className="w-3.5 h-3.5 text-ink/40" />
-                    </button>
-                    <button className="p-1.5 rounded-full hover:bg-red-50">
-                      <Trash2 className="w-3.5 h-3.5 text-red-400" />
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => handleDelete(tx.id)}
+                    className="p-1.5 rounded-full hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                  </button>
                 </div>
               ))}
             </div>

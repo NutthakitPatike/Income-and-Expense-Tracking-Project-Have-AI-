@@ -1,35 +1,77 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { mockCategories, mockAccounts } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
-import { Camera } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 
+interface Category { id: string; name: string; type: string; color: string; icon: string; }
+interface Account { id: string; name: string; type: string; }
+
 export default function AddTransactionPage() {
+  const router = useRouter();
   const [type, setType] = useState<"expense" | "income">("expense");
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [categoryId, setCategoryId] = useState("");
-  const [accountId, setAccountId] = useState(mockAccounts[0]?.id || "");
+  const [accountId, setAccountId] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
 
-  const filteredCategories = mockCategories.filter((c) => c.type === type);
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/categories").then((r) => r.json()),
+      fetch("/api/accounts").then((r) => r.json()),
+    ]).then(([cats, accs]) => {
+      setCategories(Array.isArray(cats) ? cats : []);
+      const accList = Array.isArray(accs) ? accs : [];
+      setAccounts(accList);
+      if (accList.length > 0) setAccountId(accList[0].id);
+      setLoadingData(false);
+    }).catch(() => setLoadingData(false));
+  }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const filteredCategories = categories.filter((c) => c.type === type);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!amount || !categoryId) {
+    if (!amount || !categoryId || !accountId) {
       toast.error("กรุณากรอกข้อมูลให้ครบ");
       return;
     }
-    // TODO: Save transaction to DB
-    toast.success(type === "expense" ? "บันทึกรายจ่ายแล้ว! 💸" : "บันทึกรายรับแล้ว! 💰");
-    window.location.href = "/transactions";
+    setSaving(true);
+    const res = await fetch("/api/transactions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: parseFloat(amount),
+        type,
+        note,
+        categoryId,
+        accountId,
+        date,
+      }),
+    });
+    if (res.ok) {
+      toast.success(type === "expense" ? "บันทึกรายจ่ายแล้ว! 💸" : "บันทึกรายรับแล้ว! 💰");
+      router.push("/transactions");
+    } else {
+      toast.error("บันทึกไม่สำเร็จ");
+    }
+    setSaving(false);
   };
+
+  if (loadingData) {
+    return <AppLayout title="เพิ่มรายการ"><div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-sakura" /></div></AppLayout>;
+  }
 
   return (
     <AppLayout title="เพิ่มรายการ">
@@ -38,7 +80,7 @@ export default function AddTransactionPage() {
         <div className="flex rounded-2xl bg-cream p-1">
           <button
             type="button"
-            onClick={() => setType("expense")}
+            onClick={() => { setType("expense"); setCategoryId(""); }}
             className={cn(
               "flex-1 py-2.5 rounded-xl text-sm font-medium transition-all",
               type === "expense"
@@ -50,7 +92,7 @@ export default function AddTransactionPage() {
           </button>
           <button
             type="button"
-            onClick={() => setType("income")}
+            onClick={() => { setType("income"); setCategoryId(""); }}
             className={cn(
               "flex-1 py-2.5 rounded-xl text-sm font-medium transition-all",
               type === "income"
@@ -78,47 +120,55 @@ export default function AddTransactionPage() {
         {/* Category */}
         <div>
           <label className="block text-sm font-medium text-ink/70 mb-2">หมวดหมู่</label>
-          <div className="flex flex-wrap gap-2">
-            {filteredCategories.map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => setCategoryId(cat.id)}
-                className={cn(
-                  "px-3 py-2 rounded-full text-sm border transition-all",
-                  categoryId === cat.id
-                    ? type === "expense"
-                      ? "border-sakura bg-sakura/10 text-sakura-dark"
-                      : "border-mint bg-mint/10 text-green-700"
-                    : "border-sakura/20 bg-white text-ink/50 hover:bg-cream"
-                )}
-              >
-                {cat.name}
-              </button>
-            ))}
-          </div>
+          {filteredCategories.length === 0 ? (
+            <p className="text-sm text-ink/40">ยังไม่มีหมวดหมู่ กรุณาทำ Onboarding ก่อน</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {filteredCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setCategoryId(cat.id)}
+                  className={cn(
+                    "px-3 py-2 rounded-full text-sm border transition-all",
+                    categoryId === cat.id
+                      ? type === "expense"
+                        ? "border-sakura bg-sakura/10 text-sakura-dark"
+                        : "border-mint bg-mint/10 text-green-700"
+                      : "border-sakura/20 bg-white text-ink/50 hover:bg-cream"
+                  )}
+                >
+                  {cat.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Account */}
         <div>
           <label className="block text-sm font-medium text-ink/70 mb-2">บัญชี</label>
-          <div className="flex flex-wrap gap-2">
-            {mockAccounts.map((acc) => (
-              <button
-                key={acc.id}
-                type="button"
-                onClick={() => setAccountId(acc.id)}
-                className={cn(
-                  "px-3 py-2 rounded-full text-sm border transition-all",
-                  accountId === acc.id
-                    ? "border-lavender bg-lavender/10 text-purple-700"
-                    : "border-sakura/20 bg-white text-ink/50 hover:bg-cream"
-                )}
-              >
-                {acc.name}
-              </button>
-            ))}
-          </div>
+          {accounts.length === 0 ? (
+            <p className="text-sm text-ink/40">ยังไม่มีบัญชี กรุณาเพิ่มบัญชีก่อน</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {accounts.map((acc) => (
+                <button
+                  key={acc.id}
+                  type="button"
+                  onClick={() => setAccountId(acc.id)}
+                  className={cn(
+                    "px-3 py-2 rounded-full text-sm border transition-all",
+                    accountId === acc.id
+                      ? "border-lavender bg-lavender/10 text-purple-700"
+                      : "border-sakura/20 bg-white text-ink/50 hover:bg-cream"
+                  )}
+                >
+                  {acc.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Note & Date */}
@@ -135,23 +185,9 @@ export default function AddTransactionPage() {
           onChange={(e) => setDate(e.target.value)}
         />
 
-        {/* Receipt Upload */}
-        <Card className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-lavender/20 flex items-center justify-center">
-            <Camera className="w-5 h-5 text-purple-500" />
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium text-ink">แนบใบเสร็จ</p>
-            <p className="text-xs text-ink/40">รองรับ JPG, PNG</p>
-          </div>
-          <Button type="button" variant="secondary" size="sm">
-            เลือกไฟล์
-          </Button>
-        </Card>
-
         {/* Submit */}
-        <Button type="submit" className="w-full">
-          {type === "expense" ? "บันทึกรายจ่าย 💸" : "บันทึกรายรับ 💰"}
+        <Button type="submit" disabled={saving} className="w-full">
+          {saving ? "กำลังบันทึก..." : type === "expense" ? "บันทึกรายจ่าย 💸" : "บันทึกรายรับ 💰"}
         </Button>
       </form>
     </AppLayout>
