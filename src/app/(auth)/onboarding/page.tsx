@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/utils";
-import { defaultCategories } from "@/lib/mock-data";
 import {
   Wallet,
   Building2,
@@ -15,6 +14,24 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import toast from "react-hot-toast";
+
+const defaultCategories = [
+  { name: "อาหาร", icon: "🍔", color: "#FFB7B2", type: "expense" },
+  { name: "คาเฟ่/เครื่องดื่ม", icon: "☕", color: "#FFDAC1", type: "expense" },
+  { name: "ค่าเดินทาง", icon: "🚗", color: "#C7CEEA", type: "expense" },
+  { name: "ที่อยู่อาศัย", icon: "🏠", color: "#A0D2DB", type: "expense" },
+  { name: "ช้อปปิ้ง", icon: "🛒", color: "#D4A5FF", type: "expense" },
+  { name: "สุขภาพ", icon: "💊", color: "#B5EAD7", type: "expense" },
+  { name: "บันเทิง", icon: "🎬", color: "#F4C0D1", type: "expense" },
+  { name: "การศึกษา", icon: "📚", color: "#E2F0CB", type: "expense" },
+  { name: "ค่าโทรศัพท์/เน็ต", icon: "📱", color: "#9FE1CB", type: "expense" },
+  { name: "ค่าน้ำ/ไฟ", icon: "💡", color: "#FFD700", type: "expense" },
+  { name: "อื่นๆ", icon: "📁", color: "#C7CEEA", type: "expense" },
+  { name: "เงินเดือน", icon: "💰", color: "#B5EAD7", type: "income" },
+  { name: "ฟรีแลนซ์", icon: "💻", color: "#9FE1CB", type: "income" },
+  { name: "ลงทุน/ปันผล", icon: "📈", color: "#E2F0CB", type: "income" },
+  { name: "รายรับอื่นๆ", icon: "🎯", color: "#FFD700", type: "income" },
+];
 
 const currencies = [
   { code: "THB", symbol: "฿", name: "บาท" },
@@ -46,10 +63,30 @@ export default function OnboardingPage() {
     );
   };
 
-  const handleFinish = () => {
-    // TODO: Save onboarding data to DB
-    toast.success("พร้อมใช้งานแล้ว! 🎉");
-    window.location.href = "/dashboard";
+  const handleFinish = async () => {
+    const cats = defaultCategories.filter((c) => selectedCategories.includes(c.name));
+    try {
+      const res = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          currency,
+          accountName,
+          accountType,
+          accountBalance,
+          categories: cats,
+        }),
+      });
+      if (res.ok) {
+        toast.success("พร้อมใช้งานแล้ว! 🎉");
+        window.location.href = "/dashboard";
+      } else {
+        toast.error("บันทึกไม่สำเร็จ");
+      }
+    } catch {
+      toast.error("เกิดข้อผิดพลาด");
+    }
   };
 
   return (
