@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import toast from "react-hot-toast";
@@ -10,24 +12,33 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      // TODO: Implement Supabase auth
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
       toast.success("เข้าสู่ระบบสำเร็จ! 🍡");
-      window.location.href = "/dashboard";
-    } catch {
-      toast.error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+      router.push("/dashboard");
+      router.refresh();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "เข้าสู่ระบบไม่สำเร็จ";
+      toast.error(message);
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
-    // TODO: Implement Google OAuth
-    toast("กำลังเชื่อมต่อ Google...");
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (error) toast.error("เชื่อมต่อ Google ไม่สำเร็จ");
   };
 
   return (

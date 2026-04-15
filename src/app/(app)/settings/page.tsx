@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import { mockUser } from "@/lib/mock-data";
 import {
   User,
@@ -18,8 +18,15 @@ import {
 import toast from "react-hot-toast";
 
 export default function SettingsPage() {
-  const [name, setName] = useState(mockUser.name);
   const [pushEnabled, setPushEnabled] = useState(true);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+    router.refresh();
+  };
 
   return (
     <AppLayout title="ตั้งค่า">
@@ -97,7 +104,7 @@ export default function SettingsPage() {
           <h3 className="text-sm font-semibold text-ink/50 mb-2 px-1">อื่นๆ</h3>
           <Card>
             <button
-              onClick={() => toast("ออกจากระบบ...")}
+              onClick={handleLogout}
               className="flex items-center gap-3 w-full py-2 text-red-500 hover:text-red-600"
             >
               <LogOut className="w-5 h-5" />
