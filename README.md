@@ -2,7 +2,7 @@
 
 **จัดการเงินง่ายๆ น่ารักๆ กับ Money Mochi**
 
-แอปจัดการการเงินส่วนตัวแบบ Mobile-First ที่ออกแบบมาให้ใช้งานง่าย สวยงาม พร้อมฟีเจอร์ AI ช่วยวิเคราะห์การใช้จ่าย
+แอปจัดการการเงินส่วนตัวแบบ Mobile-First ที่ออกแบบมาให้ใช้งานง่าย สวยงาม พร้อม Dark Mode และฟีเจอร์ AI ช่วยวิเคราะห์การใช้จ่าย
 
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.4-blue?logo=typescript)
@@ -16,19 +16,21 @@
 
 ### Core
 - **Dashboard** — ภาพรวมการเงิน, กราฟรายรับ-รายจ่าย, งบประมาณ, บัญชี
-- **Transactions** — บันทึกรายรับ-รายจ่าย, ค้นหา, กรอง, Export CSV
-- **Budget** — ตั้งงบประมาณรายเดือนพร้อม Progress Bar
-- **Goals** — เป้าหมายการออม พร้อม Progress Ring
-- **Accounts** — จัดการหลายบัญชี (เงินสด, ธนาคาร, e-wallet)
-- **Reports** — รายงานสรุป, กราฟ, Export PDF
+- **Transactions** — บันทึกรายรับ-รายจ่าย, ค้นหา, กรองตามประเภท, ลบรายการ
+- **Budget** — ตั้งงบประมาณรายเดือนต่อหมวดหมู่ พร้อม Progress Bar
+- **Goals** — เป้าหมายการออม พร้อม Progress Ring, เพิ่มเงินทีละครั้ง
+- **Accounts** — จัดการหลายบัญชี (เงินสด, ธนาคาร, e-wallet) CRUD ครบ
+- **Categories** — จัดการหมวดหมู่รายรับ-รายจ่าย พร้อมเลือกไอคอนและสี
+- **Reports** — รายงานสรุปรายเดือน, กราฟ Donut สัดส่วนรายจ่าย
 
 ### Advanced
+- **Dark Mode** — สลับธีม Light/Dark ได้จากหน้าตั้งค่า, บันทึกลง localStorage
 - **Split Bill** — หารบิลกับเพื่อน คำนวณอัตโนมัติ
-- **Import CSV** — นำเข้าข้อมูลจากไฟล์ CSV + AI จัดหมวดหมู่อัตโนมัติ
-- **Mochi Insight** — AI วิเคราะห์พฤติกรรมการเงินและให้คำแนะนำ (DeepSeek)
-- **Notifications** — แจ้งเตือน Push เมื่อใกล้เกินงบ
-- **Receipt Upload** — แนบรูปใบเสร็จ (Supabase Storage)
-- **PWA** — ติดตั้งเป็นแอปบนมือถือได้
+- **Import CSV** — นำเข้าข้อมูลจากไฟล์ CSV + AI จัดหมวดหมู่อัตโนมัติ (DeepSeek)
+- **Mochi Insight** — AI วิเคราะห์พฤติกรรมการเงินและให้คำแนะนำบน Dashboard
+- **Notifications** — ระบบแจ้งเตือนในแอป พร้อม Badge จำนวนยังไม่อ่าน
+- **Onboarding** — Wizard 3 ขั้นตอนสำหรับผู้ใช้ใหม่ (ชื่อ, บัญชี, หมวดหมู่)
+- **Responsive** — Mobile-First ทุกหน้า, Sidebar overlay บนมือถือ, FAB สำหรับเพิ่มรายการ
 
 ---
 
@@ -38,16 +40,14 @@
 |-------|-----------|
 | **Framework** | Next.js 14 (App Router) |
 | **Language** | TypeScript |
-| **Styling** | Tailwind CSS |
+| **Styling** | Tailwind CSS (Dark Mode via `class` strategy) |
 | **Auth** | Supabase Auth (Email + Google OAuth) |
 | **Database** | PostgreSQL (Supabase) |
 | **ORM** | Prisma |
 | **AI** | DeepSeek API (OpenAI-compatible) |
-| **Charts** | Recharts |
+| **Charts** | Custom SVG (DonutChart, ProgressRing, BarChart) |
 | **Icons** | Lucide React |
 | **Toast** | React Hot Toast |
-| **Push** | Web Push (VAPID) |
-| **Storage** | Supabase Storage |
 
 ---
 
@@ -56,45 +56,59 @@
 ```
 Money Mochi/
 ├── prisma/
-│   └── schema.prisma          # Database schema (9 models)
+│   └── schema.prisma            # Database schema
 ├── public/
-│   └── manifest.json          # PWA manifest
+│   ├── manifest.json            # PWA manifest
+│   └── sw.js                    # Service worker
 ├── src/
 │   ├── app/
+│   │   ├── api/                 # API Routes (REST)
+│   │   │   ├── accounts/        # CRUD บัญชี
+│   │   │   ├── budgets/         # CRUD งบประมาณ
+│   │   │   ├── categories/      # CRUD หมวดหมู่
+│   │   │   ├── dashboard/       # ข้อมูลสรุป Dashboard
+│   │   │   ├── goals/           # CRUD เป้าหมายออม
+│   │   │   ├── import/          # นำเข้า CSV + AI
+│   │   │   ├── insight/         # Mochi Insight (AI)
+│   │   │   ├── notifications/   # แจ้งเตือน
+│   │   │   ├── onboarding/      # ตั้งค่าเริ่มต้น
+│   │   │   ├── transactions/    # CRUD รายการ
+│   │   │   └── user/            # ข้อมูลผู้ใช้
 │   │   ├── (auth)/
-│   │   │   ├── login/         # Login page
-│   │   │   ├── register/      # Register page
-│   │   │   └── onboarding/    # 3-step onboarding wizard
+│   │   │   ├── login/           # หน้าเข้าสู่ระบบ
+│   │   │   ├── register/        # หน้าสมัคร
+│   │   │   └── onboarding/      # Wizard 3 ขั้นตอน
 │   │   ├── (app)/
-│   │   │   ├── dashboard/     # Main dashboard
-│   │   │   ├── transactions/  # Transaction list
-│   │   │   ├── add-transaction/ # Add income/expense
-│   │   │   ├── budget/        # Budget management
-│   │   │   ├── goals/         # Saving goals
-│   │   │   ├── reports/       # Financial reports
-│   │   │   ├── accounts/      # Account management
-│   │   │   ├── split-bill/    # Bill splitting
-│   │   │   ├── import/        # CSV import
-│   │   │   ├── notifications/ # Notification center
-│   │   │   └── settings/      # App settings
-│   │   ├── globals.css        # Global styles
-│   │   ├── layout.tsx         # Root layout
-│   │   └── page.tsx           # Landing page
+│   │   │   ├── dashboard/       # Dashboard หลัก
+│   │   │   ├── transactions/    # รายการทั้งหมด
+│   │   │   ├── add-transaction/ # เพิ่มรายรับ/รายจ่าย
+│   │   │   ├── budget/          # จัดการงบประมาณ
+│   │   │   ├── goals/           # เป้าหมายออม
+│   │   │   ├── reports/         # รายงาน
+│   │   │   ├── accounts/        # จัดการบัญชี
+│   │   │   ├── categories/      # จัดการหมวดหมู่
+│   │   │   ├── split-bill/      # หารบิล
+│   │   │   ├── import/          # นำเข้า CSV
+│   │   │   ├── notifications/   # ศูนย์แจ้งเตือน
+│   │   │   └── settings/        # ตั้งค่า + Dark Mode toggle
+│   │   ├── globals.css          # Global styles (Light + Dark)
+│   │   └── layout.tsx           # Root layout + ThemeProvider
 │   ├── components/
-│   │   ├── ui/                # Button, Card, Modal, Input, Badge, etc.
-│   │   ├── layout/            # Sidebar, Navbar, FAB, AppLayout
-│   │   └── charts/            # BarChart, DonutChart, LineChart, ProgressRing
-│   └── lib/
-│       ├── prisma.ts          # Prisma client singleton
-│       ├── supabase.ts        # Supabase browser client
-│       ├── supabase-server.ts # Supabase server client
-│       ├── deepseek.ts        # DeepSeek AI client
-│       ├── auth.ts            # Auth helpers
-│       ├── push.ts            # Web Push helpers
-│       ├── utils.ts           # Utility functions
-│       └── mock-data.ts       # Mock data for prototyping
-├── .env                       # Environment variables
-├── tailwind.config.ts
+│   │   ├── ThemeProvider.tsx     # Dark Mode context + toggle
+│   │   ├── ui/                  # Button, Card, Input, Badge, Modal, EmptyState, NotificationBell, Skeleton
+│   │   ├── layout/              # Sidebar, Navbar, FAB, AppLayout
+│   │   └── charts/              # DonutChart, BarChart, LineChart, ProgressRing
+│   ├── lib/
+│   │   ├── prisma.ts            # Prisma client singleton
+│   │   ├── supabase.ts          # Supabase browser client
+│   │   ├── supabase-server.ts   # Supabase server client
+│   │   ├── deepseek.ts          # DeepSeek AI client
+│   │   ├── auth.ts              # Auth helpers (getCurrentUser)
+│   │   ├── push.ts              # Web Push helpers
+│   │   └── utils.ts             # Utility functions (formatCurrency, cn, etc.)
+│   └── middleware.ts            # Route protection (auth guard)
+├── .env                         # Environment variables
+├── tailwind.config.ts           # Tailwind + custom colors + dark mode
 ├── tsconfig.json
 └── package.json
 ```
@@ -112,14 +126,14 @@ Money Mochi/
 
 ```bash
 # 1. Clone the repository
-git clone <your-repo-url>
-cd money-mochi
+git clone https://github.com/NutthakitPatike/Income-and-Expense-Tracking-Project-Have-AI-.git
+cd Money\ Mochi
 
 # 2. Install dependencies
 npm install
 
 # 3. Set up environment variables
-# Copy .env.example or create .env with the following:
+# สร้างไฟล์ .env ตามตัวอย่างด้านล่าง:
 ```
 
 ```env
@@ -134,11 +148,6 @@ DATABASE_URL="postgresql://postgres:password@db.your-project.supabase.co:5432/po
 # DeepSeek AI
 DEEPSEEK_API_KEY=your-deepseek-api-key
 DEEPSEEK_BASE_URL=https://api.deepseek.com
-
-# Web Push (generate: npx web-push generate-vapid-keys)
-NEXT_PUBLIC_VAPID_PUBLIC_KEY=your-public-key
-VAPID_PRIVATE_KEY=your-private-key
-VAPID_EMAIL=mailto:your-email@example.com
 ```
 
 ```bash
@@ -172,9 +181,10 @@ Open [http://localhost:3000](http://localhost:3000) 🍡
 ## 🎨 Design
 
 - **Theme** — Soft pastel (Sakura pink, Mint green, Cream, Lavender)
+- **Dark Mode** — สลับ Light/Dark ผ่านหน้า Settings, บันทึกค่าใน localStorage, ใช้ Tailwind `darkMode: "class"`
 - **Typography** — Noto Sans Thai
-- **Mobile-First** — Responsive sidebar, bottom FAB
-- **Dark Mode** — Coming soon
+- **Mobile-First** — Responsive ทุกหน้า, Sidebar overlay, bottom FAB, touch-friendly buttons
+- **Avatar** — แสดง emoji 🍡 หรืออักษรตัวแรกของชื่อเมื่อไม่มีรูปโปรไฟล์
 
 ---
 
