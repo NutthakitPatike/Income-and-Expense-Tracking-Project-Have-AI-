@@ -13,6 +13,19 @@ export async function GET() {
   const userId = await getUserId();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Check cache: return today's insight if it exists
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const cached = await prisma.insight.findUnique({
+    where: { userId_date: { userId, date: today } },
+  });
+
+  if (cached) {
+    return NextResponse.json({ insight: cached.message, cached: true });
+  }
+
+  // No cache — compute fresh insight
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
@@ -48,13 +61,20 @@ export async function GET() {
   const totalBudget = budgets.reduce((sum: number, b: { amount: number }) => sum + b.amount, 0);
   const budgetUsage = totalBudget > 0 ? Math.round((expense / totalBudget) * 100) : 0;
 
+  let message: string;
   try {
-    const insight = await getMochiInsight({ income, expense, topCategory, budgetUsage });
-    return NextResponse.json({ insight });
+    message = await getMochiInsight({ income, expense, topCategory, budgetUsage });
   } catch (error) {
     console.error("DeepSeek insight error:", error);
-    return NextResponse.json({
-      insight: `เดือนนี้รายรับ ${income.toLocaleString()} บาท รายจ่าย ${expense.toLocaleString()} บาท 🍡 ลองดูรายจ่ายหมวด${topCategory}นะ!`,
-    });
+    message = `เดือนนี้รายรับ ${income.toLocaleString()} บาท รายจ่าย ${expense.toLocaleString()} บาท 🍡 ลองดูรายจ่ายหมวด${topCategory}นะ!`;
   }
+
+  // Save to cache
+  await prisma.insight.upsert({
+    where: { userId_date: { userId, date: today } },
+    update: { message },
+    create: { userId, date: today, message },
+  });
+
+  return NextResponse.json({ insight: message, cached: false });
 }

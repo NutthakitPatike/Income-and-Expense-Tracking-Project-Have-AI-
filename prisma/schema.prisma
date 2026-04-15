@@ -83,7 +83,6 @@ model Budget {
   userId     String
   categoryId String
   amount     Float
-  spent      Float    @default(0)
   period     String   @default("monthly") // monthly, weekly
   startDate  DateTime @default(now())
   createdAt  DateTime @default(now())
