@@ -13,7 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="block text-sm font-medium text-ink/70 mb-1.5">
+          <label className="block text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-1.5">
             {label}
           </label>
         )}

@@ -9,14 +9,15 @@
     @apply bg-cream text-ink font-sans antialiased;
   }
 
-  .dark body {
-    @apply bg-cream-dark text-ink-dark;
+  .dark body,
+  .dark {
+    color-scheme: dark;
   }
 }
 
 @layer components {
   .card-mochi {
-    @apply bg-white rounded-2xl shadow-sm border border-sakura/20 p-4;
+    @apply bg-white dark:bg-[#333330] rounded-2xl shadow-sm border border-sakura/20 dark:border-sakura/10 p-4;
   }
 
   .btn-primary {
@@ -24,11 +25,11 @@
   }
 
   .btn-secondary {
-    @apply bg-white hover:bg-cream border border-sakura/30 text-ink font-medium rounded-2xl px-6 py-3 transition-all duration-200 active:scale-95;
+    @apply bg-white dark:bg-[#333330] hover:bg-cream dark:hover:bg-[#3a3a37] border border-sakura/30 dark:border-sakura/20 text-ink dark:text-ink-dark font-medium rounded-2xl px-6 py-3 transition-all duration-200 active:scale-95;
   }
 
   .input-mochi {
-    @apply w-full bg-white border border-sakura/30 rounded-2xl px-4 py-3 text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-sakura/50 focus:border-sakura transition-all;
+    @apply w-full bg-white dark:bg-[#333330] border border-sakura/30 dark:border-sakura/20 rounded-2xl px-4 py-3 text-ink dark:text-ink-dark placeholder:text-ink/40 dark:placeholder:text-ink-dark/40 focus:outline-none focus:ring-2 focus:ring-sakura/50 focus:border-sakura transition-all;
   }
 
   .fab {

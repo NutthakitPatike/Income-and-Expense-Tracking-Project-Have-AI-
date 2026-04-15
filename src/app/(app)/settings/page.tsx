@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useTheme } from "@/components/ThemeProvider";
 
 interface UserProfile {
   id: string;
@@ -31,6 +32,7 @@ export default function SettingsPage() {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [pushEnabled, setPushEnabled] = useState(true);
+  const { theme, toggleTheme } = useTheme();
   const [showEdit, setShowEdit] = useState(false);
   const [editName, setEditName] = useState("");
   const [editCurrency, setEditCurrency] = useState("THB");
@@ -108,19 +110,15 @@ export default function SettingsPage() {
       <div className="space-y-4">
         {/* Profile Card */}
         <Card className="flex items-center gap-4">
-          {user?.avatar ? (
-            <img src={user.avatar} alt="" className="w-14 h-14 rounded-full object-cover" />
-          ) : (
-            <div className="w-14 h-14 rounded-full bg-sakura/30 flex items-center justify-center text-xl font-bold text-sakura-dark">
-              {initial}
-            </div>
-          )}
-          <div className="flex-1">
-            <p className="font-semibold text-ink">{user?.name || "ไม่มีชื่อ"}</p>
-            <p className="text-sm text-ink/40">{user?.email}</p>
+          <div className="w-14 h-14 rounded-full bg-sakura/30 flex items-center justify-center text-xl font-bold text-sakura-dark shrink-0">
+            {initial}
           </div>
-          <button onClick={() => setShowEdit(true)} className="p-2 rounded-full hover:bg-cream">
-            <ChevronRight className="w-5 h-5 text-ink/40" />
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-ink dark:text-ink-dark truncate">{user?.name || "ไม่มีชื่อ"}</p>
+            <p className="text-sm text-ink/40 dark:text-ink-dark/40 truncate">{user?.email}</p>
+          </div>
+          <button onClick={() => setShowEdit(true)} className="p-2 rounded-full hover:bg-cream dark:hover:bg-[#3a3a37] shrink-0">
+            <ChevronRight className="w-5 h-5 text-ink/40 dark:text-ink-dark/40" />
           </button>
         </Card>
 
@@ -128,16 +126,16 @@ export default function SettingsPage() {
         {showEdit && (
           <Card className="space-y-3">
             <div className="flex justify-between items-center">
-              <p className="font-semibold text-ink text-sm">แก้ไขโปรไฟล์</p>
+              <p className="font-semibold text-ink dark:text-ink-dark text-sm">แก้ไขโปรไฟล์</p>
               <button onClick={() => setShowEdit(false)}><X className="w-4 h-4 text-ink/40" /></button>
             </div>
             <Input label="ชื่อ" value={editName} onChange={(e) => setEditName(e.target.value)} placeholder="ชื่อของคุณ" />
             <div>
-              <label className="block text-sm font-medium text-ink/70 mb-2">สกุลเงิน</label>
+              <label className="block text-sm font-medium text-ink/70 dark:text-ink-dark/70 mb-2">สกุลเงิน</label>
               <div className="flex gap-2">
                 {["THB", "USD", "JPY"].map((c) => (
                   <button key={c} type="button" onClick={() => setEditCurrency(c)}
-                    className={`px-4 py-2 rounded-full text-sm border transition-all ${editCurrency === c ? "bg-sakura/20 border-sakura text-sakura-dark" : "bg-white border-sakura/20 text-ink/50"}`}
+                    className={`px-4 py-2 rounded-full text-sm border transition-all ${editCurrency === c ? "bg-sakura/20 border-sakura text-sakura-dark" : "bg-white dark:bg-[#333330] border-sakura/20 text-ink/50 dark:text-ink-dark/50"}`}
                   >{c}</button>
                 ))}
               </div>
@@ -150,30 +148,30 @@ export default function SettingsPage() {
 
         {/* Account Settings */}
         <div>
-          <h3 className="text-sm font-semibold text-ink/50 mb-2 px-1">บัญชี</h3>
-          <Card className="divide-y divide-sakura/10">
+          <h3 className="text-sm font-semibold text-ink/50 dark:text-ink-dark/50 mb-2 px-1">บัญชี</h3>
+          <Card className="divide-y divide-sakura/10 dark:divide-sakura/5">
             <button onClick={() => setShowEdit(true)} className="flex items-center gap-3 py-3 w-full">
               <User className="w-5 h-5 text-sakura" />
-              <span className="flex-1 text-sm text-ink text-left">แก้ไขโปรไฟล์</span>
-              <ChevronRight className="w-4 h-4 text-ink/30" />
+              <span className="flex-1 text-sm text-ink dark:text-ink-dark text-left">แก้ไขโปรไฟล์</span>
+              <ChevronRight className="w-4 h-4 text-ink/30 dark:text-ink-dark/30" />
             </button>
           </Card>
         </div>
 
         {/* Preferences */}
         <div>
-          <h3 className="text-sm font-semibold text-ink/50 mb-2 px-1">การตั้งค่า</h3>
-          <Card className="divide-y divide-sakura/10">
+          <h3 className="text-sm font-semibold text-ink/50 dark:text-ink-dark/50 mb-2 px-1">การตั้งค่า</h3>
+          <Card className="divide-y divide-sakura/10 dark:divide-sakura/5">
             <div className="flex items-center gap-3 py-3">
               <Bell className="w-5 h-5 text-peach" />
-              <span className="flex-1 text-sm text-ink">แจ้งเตือน Push</span>
+              <span className="flex-1 text-sm text-ink dark:text-ink-dark">แจ้งเตือน Push</span>
               <button
                 onClick={() => {
                   setPushEnabled(!pushEnabled);
                   toast.success(pushEnabled ? "ปิดแจ้งเตือนแล้ว" : "เปิดแจ้งเตือนแล้ว");
                 }}
                 className={`w-11 h-6 rounded-full transition-all ${
-                  pushEnabled ? "bg-mint" : "bg-ink/20"
+                  pushEnabled ? "bg-mint" : "bg-ink/20 dark:bg-ink-dark/20"
                 }`}
               >
                 <div
@@ -183,23 +181,26 @@ export default function SettingsPage() {
                 />
               </button>
             </div>
-            <div className="flex items-center gap-3 py-3">
+            <button
+              onClick={() => { toggleTheme(); toast.success(theme === "light" ? "เปลี่ยนเป็นโหมดมืด 🌙" : "เปลี่ยนเป็นโหมดสว่าง ☀️"); }}
+              className="flex items-center gap-3 py-3 w-full"
+            >
               <Palette className="w-5 h-5 text-lavender" />
-              <span className="flex-1 text-sm text-ink">ธีม</span>
-              <span className="text-xs text-ink/40">สว่าง</span>
-              <ChevronRight className="w-4 h-4 text-ink/30" />
-            </div>
+              <span className="flex-1 text-sm text-ink dark:text-ink-dark text-left">ธีม</span>
+              <span className="text-xs text-ink/40 dark:text-ink-dark/40">{theme === "light" ? "สว่าง ☀️" : "มืด 🌙"}</span>
+              <ChevronRight className="w-4 h-4 text-ink/30 dark:text-ink-dark/30" />
+            </button>
             <button onClick={handleExport} className="flex items-center gap-3 py-3 w-full">
               <Download className="w-5 h-5 text-sakura" />
-              <span className="flex-1 text-sm text-ink text-left">Export ข้อมูล</span>
-              <ChevronRight className="w-4 h-4 text-ink/30" />
+              <span className="flex-1 text-sm text-ink dark:text-ink-dark text-left">Export ข้อมูล</span>
+              <ChevronRight className="w-4 h-4 text-ink/30 dark:text-ink-dark/30" />
             </button>
           </Card>
         </div>
 
         {/* Danger Zone */}
         <div>
-          <h3 className="text-sm font-semibold text-ink/50 mb-2 px-1">อื่นๆ</h3>
+          <h3 className="text-sm font-semibold text-ink/50 dark:text-ink-dark/50 mb-2 px-1">อื่นๆ</h3>
           <Card>
             <button
               onClick={handleLogout}
@@ -211,7 +212,7 @@ export default function SettingsPage() {
           </Card>
         </div>
 
-        <p className="text-center text-xs text-ink/30 pt-4">
+        <p className="text-center text-xs text-ink/30 dark:text-ink-dark/30 pt-4">
           Money Mochi v1.0.0 • Made with 🍡
         </p>
       </div>

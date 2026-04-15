@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,7 +23,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="th" suppressHydrationWarning>
-      <body className="min-h-screen bg-cream">
+      <body className="min-h-screen bg-cream dark:bg-cream-dark dark:text-ink-dark" suppressHydrationWarning>
+        <ThemeProvider>
         {children}
         <Toaster
           position="top-center"
@@ -38,6 +40,7 @@ export default function RootLayout({
             },
           }}
         />
+        </ThemeProvider>
       </body>
     </html>
   );

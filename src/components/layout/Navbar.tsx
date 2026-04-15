@@ -36,27 +36,31 @@ export function Navbar({ onMenuClick, title }: NavbarProps) {
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-sakura/10 px-4 py-3">
+    <header className="sticky top-0 z-30 bg-white/80 dark:bg-[#2A2A28]/80 backdrop-blur-md border-b border-sakura/10 dark:border-sakura/5 px-4 py-3">
       <div className="flex items-center justify-between max-w-5xl mx-auto">
         <div className="flex items-center gap-3">
           <button
             onClick={onMenuClick}
-            className="lg:hidden p-2 rounded-full hover:bg-cream transition-colors"
+            className="lg:hidden p-2 rounded-full hover:bg-cream dark:hover:bg-[#333330] transition-colors"
           >
-            <Menu className="w-5 h-5 text-ink" />
+            <Menu className="w-5 h-5 text-ink dark:text-ink-dark" />
           </button>
-          {title && <h1 className="font-bold text-lg text-ink">{title}</h1>}
+          {title && <h1 className="font-bold text-lg text-ink dark:text-ink-dark">{title}</h1>}
         </div>
         <div className="flex items-center gap-2">
           <NotificationBell unreadCount={unread} />
           <Link href="/settings">
             {avatar ? (
-              <img src={avatar} alt="" className="w-8 h-8 rounded-full object-cover" />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-sakura/30 flex items-center justify-center text-sm font-bold text-sakura-dark">
-                {initial}
-              </div>
-            )}
+              <img
+                src={avatar}
+                alt=""
+                className="w-8 h-8 rounded-full object-cover"
+                onError={(e) => { e.currentTarget.style.display = "none"; e.currentTarget.nextElementSibling?.classList.remove("hidden"); }}
+              />
+            ) : null}
+            <div className={`w-8 h-8 rounded-full bg-sakura/30 flex items-center justify-center text-sm font-bold text-sakura-dark ${avatar ? "hidden" : ""}`}>
+              {initial}
+            </div>
           </Link>
         </div>
       </div>

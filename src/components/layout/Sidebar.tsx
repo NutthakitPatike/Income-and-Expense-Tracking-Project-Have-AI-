@@ -53,18 +53,18 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-sakura/20 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:z-0",
+          "fixed top-0 left-0 z-50 h-full w-64 bg-white dark:bg-[#2A2A28] border-r border-sakura/20 dark:border-sakura/10 transform transition-transform duration-300 lg:translate-x-0 lg:static lg:z-0",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-sakura/10">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-sakura/10 dark:border-sakura/5">
           <Link href="/dashboard" className="flex items-center gap-2">
             <span className="text-2xl">🍡</span>
-            <span className="font-bold text-lg text-ink">Money Mochi</span>
+            <span className="font-bold text-lg text-ink dark:text-ink-dark">Money Mochi</span>
           </Link>
-          <button onClick={onClose} className="lg:hidden p-1 rounded-full hover:bg-cream">
-            <X className="w-5 h-5 text-ink/50" />
+          <button onClick={onClose} className="lg:hidden p-1 rounded-full hover:bg-cream dark:hover:bg-[#333330]">
+            <X className="w-5 h-5 text-ink/50 dark:text-ink-dark/50" />
           </button>
         </div>
 
@@ -82,7 +82,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   "flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium transition-all",
                   isActive
                     ? "bg-sakura/20 text-sakura-dark"
-                    : "text-ink/60 hover:bg-cream hover:text-ink"
+                    : "text-ink/60 dark:text-ink-dark/60 hover:bg-cream dark:hover:bg-[#333330] hover:text-ink dark:hover:text-ink-dark"
                 )}
               >
                 <Icon className="w-5 h-5" />
