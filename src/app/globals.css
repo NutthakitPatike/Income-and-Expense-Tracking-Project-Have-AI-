@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@layer base {
+  body {
+    @apply bg-cream text-ink font-sans antialiased;
+  }
+
+  .dark body {
+    @apply bg-cream-dark text-ink-dark;
+  }
+}
+
+@layer components {
+  .card-mochi {
+    @apply bg-white rounded-2xl shadow-sm border border-sakura/20 p-4;
+  }
+
+  .btn-primary {
+    @apply bg-sakura hover:bg-sakura-dark text-white font-semibold rounded-2xl px-6 py-3 transition-all duration-200 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-cream border border-sakura/30 text-ink font-medium rounded-2xl px-6 py-3 transition-all duration-200 active:scale-95;
+  }
+
+  .input-mochi {
+    @apply w-full bg-white border border-sakura/30 rounded-2xl px-4 py-3 text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-sakura/50 focus:border-sakura transition-all;
+  }
+
+  .fab {
+    @apply fixed bottom-6 right-6 z-50 w-14 h-14 bg-sakura hover:bg-sakura-dark text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 active:scale-90;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #F4C0D1;
+  border-radius: 3px;
+}
+
+/* Number pad animation */
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+.animate-pop {
+  animation: pop 0.15s ease-in-out;
+}

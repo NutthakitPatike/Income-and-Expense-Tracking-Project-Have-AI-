@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String         @id @default(uuid())
+  name         String?
+  email        String         @unique
+  avatar       String?
+  currency     String         @default("THB")
+  onboarded    Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  accounts     Account[]
+  transactions Transaction[]
+  categories   Category[]
+  budgets      Budget[]
+  savingGoals  SavingGoal[]
+  notifications Notification[]
+  insights     Insight[]
+  pushSubscriptions PushSubscription[]
+}
+
+model Account {
+  id           String        @id @default(uuid())
+  userId       String
+  name         String
+  type         String        // cash, bank, wallet
+  balance      Float         @default(0)
+  color        String        @default("#F4C0D1")
+  icon         String        @default("wallet")
+  createdAt    DateTime      @default(now())
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@index([userId])
+}
+
+model Transaction {
+  id                String    @id @default(uuid())
+  accountId         String
+  userId            String
+  type              String    // income, expense, transfer
+  amount            Float
+  note              String?
+  categoryId        String?
+  tags              String[]
+  receiptUrl        String?
+  date              DateTime  @default(now())
+  isRecurring       Boolean   @default(false)
+  recurringInterval String?   // daily, weekly, monthly
+  createdAt         DateTime  @default(now())
+  account           Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category          Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([accountId])
+  @@index([date])
+}
+
+model Category {
+  id           String        @id @default(uuid())
+  userId       String?
+  name         String
+  icon         String
+  color        String
+  type         String        // income, expense
+  isDefault    Boolean       @default(false)
+  transactions Transaction[]
+  budgets      Budget[]
+  user         User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Budget {
+  id         String   @id @default(uuid())
+  userId     String
+  categoryId String
+  amount     Float
+  spent      Float    @default(0)
+  period     String   @default("monthly") // monthly, weekly
+  startDate  DateTime @default(now())
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model SavingGoal {
+  id            String   @id @default(uuid())
+  userId        String
+  name          String
+  targetAmount  Float
+  currentAmount Float    @default(0)
+  deadline      DateTime?
+  icon          String   @default("piggy-bank")
+  color         String   @default("#9FE1CB")
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String   // budget_warning, goal_deadline, system
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Insight {
+  id        String   @id @default(uuid())
+  userId    String
+  message   String
+  date      DateTime @default(now()) @db.Date
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
+}
+
+model PushSubscription {
+  id        String   @id @default(uuid())
+  userId    String
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
